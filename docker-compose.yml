@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    command: python -m vllm.entrypoints.api_server openai/gpt-oss-20b
+
+  backend:
+    image: ghcr.io/cloud-linuxer/argocd-apps/backend:3.1.12-amd64
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV=production
+      - PORT=8080
+      - LOG_LEVEL=DEBUG
+      - VLLM_BASE_URL=http://vllm:8000
+      - VLLM_MODEL=openai/gpt-oss-20b
+      - VLLM_MAX_TOKENS=1000
+      - VLLM_TEMPERATURE=0.7
+      - VLLM_TIMEOUT=60
+    depends_on:
+      - vllm
+
+  frontend:
+    image: ghcr.io/cloud-linuxer/argocd-apps/frontend:3.0.8-amd64
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend:8080
+      - STREAMLIT_SERVER_FILE_WATCHER_TYPE=none
+    depends_on:
+      - backend
