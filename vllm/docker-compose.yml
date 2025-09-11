@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  vllm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vllm-rtx5090:latest
+    container_name: vllm-server
+    runtime: nvidia
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - VLLM_LOGGING_LEVEL=INFO
+      - HF_TOKEN=${HF_TOKEN}
+      - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+      - VLLM_ATTENTION_BACKEND=FLASH_ATTN
+    ports:
+      - "8000:8000"
+    volumes:
+      - /home/gpt-oss/models:/models
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    command: >
+      --model ${MODEL_NAME:-facebook/opt-125m}
+      --dtype ${DTYPE:-auto}
+      --host 0.0.0.0
+      --port 8000
+      --max-model-len ${MAX_MODEL_LEN:-4096}
+      --gpu-memory-utilization ${GPU_MEMORY_UTIL:-0.9}
+      --tensor-parallel-size ${TP_SIZE:-1}
+      --enable-prefix-caching
+      --enable-chunked-prefill
+      --max-num-batched-tokens ${MAX_BATCH_TOKENS:-32768}
+      --max-num-seqs ${MAX_NUM_SEQS:-256}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - vllm-network
+
+networks:
+  vllm-network:
+    driver: bridge

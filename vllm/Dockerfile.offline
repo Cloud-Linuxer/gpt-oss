@@ -10,16 +10,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git curl ca-certificates build-essential ninja-build cmake jq \
  && rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install --upgrade pip && pip install uv
+RUN python3 -m pip install --upgrade pip
 
 # RTX 5090 (Blackwell) 아키텍처 설정
 ENV TORCH_CUDA_ARCH_LIST="9.0+PTX"
 ENV CUDA_VISIBLE_DEVICES=0
 
-# PyTorch 및 vLLM 설치
+# PyTorch CUDA 12.4 설치
+RUN pip install torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+
+# vLLM 및 관련 패키지 설치
 RUN pip install --no-cache-dir \
-    torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 && \
-    pip install --no-cache-dir \
     vllm \
     transformers \
     accelerate \
@@ -29,15 +30,11 @@ RUN pip install --no-cache-dir \
 
 WORKDIR /app
 
-# vllm 로깅 설정
 ENV VLLM_LOGGING_LEVEL=INFO
 
 EXPOSE 8000
 
-# 헬스체크
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 
-# 기본 엔트리포인트 - 환경변수로 설정 가능
 ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
-

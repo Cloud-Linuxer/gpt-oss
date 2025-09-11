@@ -1,0 +1,29 @@
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+ && rm -rf /var/lib/apt/lists/*
+
+# 사전 다운로드된 wheel 파일 복사
+COPY deps/wheels /tmp/wheels
+
+# 로컬 wheel 우선 설치
+RUN if [ -d /tmp/wheels ] && [ "$(ls -A /tmp/wheels)" ]; then \
+        pip install /tmp/wheels/torch*.whl 2>/dev/null || true; \
+    fi
+
+# vllm 및 기타 패키지 설치
+RUN pip install --no-cache-dir \
+    vllm \
+    transformers \
+    accelerate \
+    ray[serve]
+
+WORKDIR /app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
+
+ENTRYPOINT ["python", "-m", "vllm.entrypoints.openai.api_server"]

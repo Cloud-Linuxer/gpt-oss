@@ -1,0 +1,1029 @@
+2025-09-09T06:07:38Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2025-09-09T06:07:38Z INF Requesting new quick Tunnel on trycloudflare.com...
+2025-09-09T06:07:41Z INF +--------------------------------------------------------------------------------------------+
+2025-09-09T06:07:41Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2025-09-09T06:07:41Z INF |  https://thickness-mistress-regard-michel.trycloudflare.com                                |
+2025-09-09T06:07:41Z INF +--------------------------------------------------------------------------------------------+
+2025-09-09T06:07:41Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+2025-09-09T06:07:41Z INF Version 2025.8.1 (Checksum a66353004197ee4c1fcb68549203824882bba62378ad4d00d234bdb8251f1114)
+2025-09-09T06:07:41Z INF GOOS: linux, GOVersion: go1.24.4, GoArch: amd64
+2025-09-09T06:07:41Z INF Settings: map[ha-connections:1 protocol:quic url:http://localhost:9090]
+2025-09-09T06:07:41Z INF cloudflared will not automatically update if installed by a package manager.
+2025-09-09T06:07:41Z INF Generated Connector ID: 232e1079-8751-4128-b72e-5eb914e3d00e
+2025-09-09T06:07:41Z INF Initial protocol quic
+2025-09-09T06:07:41Z INF ICMP proxy will use 192.168.55.160 as source for IPv4
+2025-09-09T06:07:41Z INF ICMP proxy will use fd58:1587:e7a:e141:78b:affd:712e:74c2 in zone wlp5s0 as source for IPv6
+2025-09-09T06:07:41Z ERR Cannot determine default origin certificate path. No file cert.pem in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]. You need to specify the origin certificate path by specifying the origincert option in the configuration file, or set TUNNEL_ORIGIN_CERT environment variable originCertPath=
+2025-09-09T06:07:41Z INF ICMP proxy will use 192.168.55.160 as source for IPv4
+2025-09-09T06:07:41Z INF ICMP proxy will use fd58:1587:e7a:e141:78b:affd:712e:74c2 in zone wlp5s0 as source for IPv6
+2025-09-09T06:07:41Z INF Starting metrics server on 127.0.0.1:20242/metrics
+2025-09-09T06:07:41Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.73
+2025-09-09T06:07:41Z INF Registered tunnel connection connIndex=0 connection=e3dfc042-3f44-4c16-994c-55452414f40c event=0 ip=198.41.200.73 location=icn01 protocol=quic
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 941B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/nvidia/cuda:12.8.0-devel-ubuntu22.04
+#2 DONE 1.3s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/nvidia/cuda:12.8.0-devel-ubuntu22.04@sha256:54f18e2a8e1b3d03f77b9a6dc905533da46ac93a5513f10e8ba8e560db9fa5ab
+#4 DONE 0.0s
+
+#5 [2/8] RUN apt-get update && apt-get install -y --no-install-recommends     python3 python3-pip python3-dev python3-venv     git curl ca-certificates build-essential ninja-build cmake jq  && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [5/8] RUN pip install --no-cache-dir "flashinfer-python==0.3.1"
+#6 CACHED
+
+#7 [3/8] RUN python3 -m pip install --upgrade pip && pip install uv
+#7 CACHED
+
+#8 [4/8] RUN pip install --pre torch torchvision torchaudio     --index-url https://download.pytorch.org/whl/nightly/cu128
+#8 CACHED
+
+#9 [6/8] RUN git clone --depth 1 https://github.com/vllm-project/vllm.git /opt/vllm
+#9 CACHED
+
+#10 [7/8] WORKDIR /opt/vllm
+#10 CACHED
+
+#11 [8/8] RUN uv pip install --system -e .
+#11 0.196 Using Python 3.10.12 environment at: /usr
+#11 CANCELED
+ERROR: failed to build: failed to solve: Canceled: context canceled
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 941B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/nvidia/cuda:12.8.0-devel-ubuntu22.04
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/nvidia/cuda:12.8.0-devel-ubuntu22.04@sha256:54f18e2a8e1b3d03f77b9a6dc905533da46ac93a5513f10e8ba8e560db9fa5ab
+#4 DONE 0.0s
+
+#5 [6/8] RUN git clone --depth 1 https://github.com/vllm-project/vllm.git /opt/vllm
+#5 CACHED
+
+#6 [3/8] RUN python3 -m pip install --upgrade pip && pip install uv
+#6 CACHED
+
+#7 [4/8] RUN pip install --pre torch torchvision torchaudio     --index-url https://download.pytorch.org/whl/nightly/cu128
+#7 CACHED
+
+#8 [2/8] RUN apt-get update && apt-get install -y --no-install-recommends     python3 python3-pip python3-dev python3-venv     git curl ca-certificates build-essential ninja-build cmake jq  && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [5/8] RUN pip install --no-cache-dir "flashinfer-python==0.3.1"
+#9 CACHED
+
+#10 [7/8] WORKDIR /opt/vllm
+#10 CACHED
+
+#11 [8/8] RUN uv pip install --system -e .
+#11 0.113 Using Python 3.10.12 environment at: /usr
+#11 368.1 Resolved 142 packages in 6m 07s
+#11 368.1    Building vllm @ file:///opt/vllm
+#11 368.1 Downloading numba (3.6MiB)
+#11 368.1 Downloading openai-harmony (2.9MiB)
+#11 368.1 Downloading pydantic-core (1.9MiB)
+#11 368.1 Downloading pygments (1.2MiB)
+#11 368.1 Downloading opencv-python-headless (51.5MiB)
+#11 368.1 Downloading scipy (35.9MiB)
+#11 368.1 Downloading tiktoken (1.1MiB)
+#11 368.1 Downloading hf-xet (3.0MiB)
+#11 368.1 Downloading cupy-cuda12x (107.0MiB)
+#11 368.1 Downloading llguidance (14.3MiB)
+#11 368.1 Downloading transformers (11.1MiB)
+#11 368.1 Downloading tokenizers (3.2MiB)
+#11 368.1 Downloading setuptools (1.1MiB)
+#11 368.1 Downloading soundfile (1.3MiB)
+#11 368.1 Downloading uvloop (3.6MiB)
+#11 368.1 Downloading llvmlite (40.4MiB)
+#11 368.1 Downloading aiohttp (1.6MiB)
+#11 368.1 Downloading sentencepiece (1.3MiB)
+#11 368.1 Downloading xgrammar (7.5MiB)
+#11 368.1 Downloading torchaudio (3.8MiB)
+#11 368.1 Downloading ray (66.7MiB)
+#11 368.1 Downloading pycountry (6.0MiB)
+#11 368.1 Downloading outlines-core (2.2MiB)
+#11 368.1 Downloading mistral-common (6.2MiB)
+#11 368.1 Downloading xformers (111.8MiB)
+#11 368.1 Downloading torchvision (8.2MiB)
+#11 371.1  Downloading pygments
+#11 371.2  Downloading setuptools
+#11 371.2  Downloading tiktoken
+#11 371.3  Downloading soundfile
+#11 371.5  Downloading sentencepiece
+#11 371.8  Downloading aiohttp
+#11 372.2  Downloading pydantic-core
+#11 372.7  Downloading outlines-core
+#11 373.3  Downloading openai-harmony
+#11 373.7  Downloading hf-xet
+#11 373.7  Downloading tokenizers
+#11 374.2  Downloading numba
+#11 374.3  Downloading uvloop
+#11 374.4  Downloading torchaudio
+#11 376.7  Downloading mistral-common
+#11 376.9  Downloading pycountry
+#11 379.4  Downloading xgrammar
+#11 380.9  Downloading torchvision
+#11 383.3  Downloading transformers
+#11 395.5  Downloading llguidance
+#11 411.8  Downloading scipy
+#11 417.2  Downloading llvmlite
+#11 420.8  Downloading opencv-python-headless
+#11 432.5  Downloading ray
+#11 437.9  Downloading cupy-cuda12x
+#11 438.3  Downloading xformers
+#11 CANCELED
+ERROR: failed to build: failed to solve: Canceled: context canceled
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 941B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/nvidia/cuda:12.8.0-devel-ubuntu22.04
+#2 DONE 1.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/nvidia/cuda:12.8.0-devel-ubuntu22.04@sha256:54f18e2a8e1b3d03f77b9a6dc905533da46ac93a5513f10e8ba8e560db9fa5ab
+#4 DONE 0.0s
+
+#5 [5/8] RUN pip install --no-cache-dir "flashinfer-python==0.3.1"
+#5 CACHED
+
+#6 [6/8] RUN git clone --depth 1 https://github.com/vllm-project/vllm.git /opt/vllm
+#6 CACHED
+
+#7 [2/8] RUN apt-get update && apt-get install -y --no-install-recommends     python3 python3-pip python3-dev python3-venv     git curl ca-certificates build-essential ninja-build cmake jq  && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [3/8] RUN python3 -m pip install --upgrade pip && pip install uv
+#8 CACHED
+
+#9 [4/8] RUN pip install --pre torch torchvision torchaudio     --index-url https://download.pytorch.org/whl/nightly/cu128
+#9 CACHED
+
+#10 [7/8] WORKDIR /opt/vllm
+#10 CACHED
+
+#11 [8/8] RUN uv pip install --system -e .
+#11 0.200 Using Python 3.10.12 environment at: /usr
+#11 332.2 Resolved 142 packages in 5m 31s
+#11 332.2    Building vllm @ file:///opt/vllm
+#11 332.2 Downloading soundfile (1.3MiB)
+#11 332.2 Downloading tokenizers (3.2MiB)
+#11 332.2 Downloading hf-xet (3.0MiB)
+#11 332.2 Downloading setuptools (1.1MiB)
+#11 332.2 Downloading tiktoken (1.1MiB)
+#11 332.2 Downloading uvloop (3.6MiB)
+#11 332.2 Downloading torchaudio (3.8MiB)
+#11 332.2 Downloading pygments (1.2MiB)
+#11 332.2 Downloading pydantic-core (1.9MiB)
+#11 332.2 Downloading aiohttp (1.6MiB)
+#11 332.2 Downloading llvmlite (40.4MiB)
+#11 332.2 Downloading scipy (35.9MiB)
+#11 332.2 Downloading xformers (111.8MiB)
+#11 332.2 Downloading opencv-python-headless (51.5MiB)
+#11 332.2 Downloading sentencepiece (1.3MiB)
+#11 332.2 Downloading outlines-core (2.2MiB)
+#11 332.2 Downloading transformers (11.1MiB)
+#11 332.2 Downloading llguidance (14.3MiB)
+#11 332.2 Downloading pycountry (6.0MiB)
+#11 332.2 Downloading ray (66.7MiB)
+#11 332.2 Downloading numba (3.6MiB)
+#11 332.2 Downloading xgrammar (7.5MiB)
+#11 332.2 Downloading openai-harmony (2.9MiB)
+#11 332.2 Downloading mistral-common (6.2MiB)
+#11 332.2 Downloading cupy-cuda12x (107.0MiB)
+#11 332.2 Downloading torchvision (8.2MiB)
+#11 335.1  Downloading tiktoken
+#11 335.1  Downloading setuptools
+#11 335.2  Downloading pygments
+#11 335.2  Downloading soundfile
+#11 335.4  Downloading sentencepiece
+#11 336.1  Downloading aiohttp
+#11 336.9  Downloading pydantic-core
+#11 337.3  Downloading outlines-core
+#11 338.3  Downloading openai-harmony
+#11 344.1  Downloading hf-xet
+#11 347.2  Downloading tokenizers
+#11 348.7  Downloading uvloop
+#11 349.1  Downloading torchaudio
+#11 349.1  Downloading numba
+#11 352.9  Downloading pycountry
+#11 353.0  Downloading mistral-common
+#11 353.9  Downloading xgrammar
+#11 354.4  Downloading torchvision
+#11 356.4  Downloading transformers
+#11 361.2  Downloading llguidance
+#11 387.2  Downloading scipy
+#11 388.6  Downloading llvmlite
+#11 391.8  Downloading opencv-python-headless
+#11 395.1  Downloading ray
+#11 401.0  Downloading cupy-cuda12x
+#11 401.2  Downloading xformers
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.20kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/nvidia/cuda:12.8.0-devel-ubuntu22.04
+#2 DONE 1.5s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/9] FROM docker.io/nvidia/cuda:12.8.0-devel-ubuntu22.04@sha256:54f18e2a8e1b3d03f77b9a6dc905533da46ac93a5513f10e8ba8e560db9fa5ab
+#4 CACHED
+
+#5 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends     python3 python3-pip python3-dev python3-venv     git curl ca-certificates build-essential ninja-build cmake jq  && rm -rf /var/lib/apt/lists/*
+#5 0.371 Get:1 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  InRelease [1581 B]
+#5 0.448 Get:2 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages [2005 kB]
+#5 0.643 Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+#5 0.816 Get:4 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+#5 1.751 Get:5 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [5374 kB]
+#5 2.144 Get:6 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+#5 2.464 Get:7 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+#5 2.786 Get:8 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+#5 2.962 Get:9 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+#5 3.380 Get:10 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3310 kB]
+#5 3.610 Get:11 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [48.5 kB]
+#5 3.613 Get:12 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1273 kB]
+#5 4.890 Get:13 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+#5 4.903 Get:14 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+#5 5.050 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [5560 kB]
+#5 5.424 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3623 kB]
+#5 5.673 Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [75.9 kB]
+#5 5.683 Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1581 kB]
+#5 5.777 Get:19 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.2 kB]
+#5 5.779 Get:20 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [83.2 kB]
+#5 5.820 Fetched 43.3 MB in 6s (7662 kB/s)
+#5 5.820 Reading package lists...
+#5 6.252 Reading package lists...
+#5 6.668 Building dependency tree...
+#5 6.760 Reading state information...
+#5 6.836 build-essential is already the newest version (12.9ubuntu3).
+#5 6.836 build-essential set to manually installed.
+#5 6.836 ca-certificates is already the newest version (20240203~22.04.1).
+#5 6.836 The following additional packages will be installed:
+#5 6.836   cmake-data dh-elpa-helper emacsen-common git-man libarchive13 libbrotli1
+#5 6.836   libcurl3-gnutls libcurl4 liberror-perl libexpat1 libexpat1-dev libicu70
+#5 6.836   libjq1 libjs-jquery libjs-sphinxdoc libjs-underscore libjsoncpp25 libmpdec3
+#5 6.836   libnghttp2-14 libonig5 libpsl5 libpython3-dev libpython3-stdlib
+#5 6.836   libpython3.10 libpython3.10-dev libpython3.10-minimal libpython3.10-stdlib
+#5 6.836   librhash0 librtmp1 libssh-4 libuv1 libxml2 media-types python3-distutils
+#5 6.836   python3-lib2to3 python3-minimal python3-pip-whl python3-pkg-resources
+#5 6.836   python3-setuptools python3-setuptools-whl python3-wheel python3.10
+#5 6.836   python3.10-dev python3.10-minimal python3.10-venv zlib1g-dev
+#5 6.836 Suggested packages:
+#5 6.836   cmake-doc cmake-format gettext-base git-daemon-run | git-daemon-sysvinit
+#5 6.836   git-doc git-email git-gui gitk gitweb git-cvs git-mediawiki git-svn lrzip
+#5 6.836   python3-doc python3-tk python-setuptools-doc python3.10-doc binfmt-support
+#5 6.836 Recommended packages:
+#5 6.836   less ssh-client javascript-common publicsuffix
+#5 6.908 The following NEW packages will be installed:
+#5 6.908   cmake cmake-data curl dh-elpa-helper emacsen-common git git-man jq
+#5 6.908   libarchive13 libbrotli1 libcurl3-gnutls libcurl4 liberror-perl libexpat1
+#5 6.908   libexpat1-dev libicu70 libjq1 libjs-jquery libjs-sphinxdoc libjs-underscore
+#5 6.909   libjsoncpp25 libmpdec3 libnghttp2-14 libonig5 libpsl5 libpython3-dev
+#5 6.909   libpython3-stdlib libpython3.10 libpython3.10-dev libpython3.10-minimal
+#5 6.909   libpython3.10-stdlib librhash0 librtmp1 libssh-4 libuv1 libxml2 media-types
+#5 6.909   ninja-build python3 python3-dev python3-distutils python3-lib2to3
+#5 6.909   python3-minimal python3-pip python3-pip-whl python3-pkg-resources
+#5 6.909   python3-setuptools python3-setuptools-whl python3-venv python3-wheel
+#5 6.909   python3.10 python3.10-dev python3.10-minimal python3.10-venv zlib1g-dev
+#5 7.407 0 upgraded, 55 newly installed, 0 to remove and 120 not upgraded.
+#5 7.407 Need to get 43.4 MB of archives.
+#5 7.407 After this operation, 162 MB of additional disk space will be used.
+#5 7.407 Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-minimal amd64 3.10.12-1~22.04.11 [815 kB]
+#5 9.172 Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1 amd64 2.4.7-1ubuntu0.6 [92.1 kB]
+#5 9.188 Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-minimal amd64 3.10.12-1~22.04.11 [2264 kB]
+#5 9.684 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-minimal amd64 3.10.6-1~22.04.1 [24.3 kB]
+#5 9.687 Get:5 http://archive.ubuntu.com/ubuntu jammy/main amd64 media-types all 7.0.0 [25.5 kB]
+#5 9.690 Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpdec3 amd64 2.5.1-2build2 [86.8 kB]
+#5 9.700 Get:7 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-stdlib amd64 3.10.12-1~22.04.11 [1850 kB]
+#5 9.889 Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10 amd64 3.10.12-1~22.04.11 [508 kB]
+#5 9.942 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3-stdlib amd64 3.10.6-1~22.04.1 [6812 B]
+#5 9.943 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3 amd64 3.10.6-1~22.04.1 [22.8 kB]
+#5 9.946 Get:11 http://archive.ubuntu.com/ubuntu jammy/main amd64 libicu70 amd64 70.1-2 [10.6 MB]
+#5 11.56 Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libxml2 amd64 2.9.13+dfsg-1ubuntu0.8 [763 kB]
+#5 11.61 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-pkg-resources all 59.6.0-1.2ubuntu0.22.04.3 [133 kB]
+#5 11.62 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnghttp2-14 amd64 1.43.0-1ubuntu0.2 [76.9 kB]
+#5 11.63 Get:15 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpsl5 amd64 0.21.0-1.2build2 [58.4 kB]
+#5 11.63 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libuv1 amd64 1.43.0-1ubuntu0.1 [92.7 kB]
+#5 11.64 Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libarchive13 amd64 3.6.0-1ubuntu1.5 [368 kB]
+#5 11.66 Get:18 http://archive.ubuntu.com/ubuntu jammy/main amd64 libbrotli1 amd64 1.0.9-2build6 [315 kB]
+#5 11.68 Get:19 http://archive.ubuntu.com/ubuntu jammy/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2build4 [58.2 kB]
+#5 11.68 Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssh-4 amd64 0.9.6-2ubuntu0.22.04.4 [187 kB]
+#5 11.80 Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl4 amd64 7.81.0-1ubuntu1.20 [289 kB]
+#5 12.86 Get:22 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjsoncpp25 amd64 1.9.5-3 [80.0 kB]
+#5 12.97 Get:23 http://archive.ubuntu.com/ubuntu jammy/main amd64 librhash0 amd64 1.4.2-1ubuntu1 [125 kB]
+#5 14.26 Get:24 http://archive.ubuntu.com/ubuntu jammy/main amd64 dh-elpa-helper all 2.0.9ubuntu1 [7610 B]
+#5 14.26 Get:25 http://archive.ubuntu.com/ubuntu jammy/main amd64 emacsen-common all 3.0.4 [14.9 kB]
+#5 14.26 Get:26 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 cmake-data all 3.22.1-1ubuntu1.22.04.2 [1913 kB]
+#5 14.75 Get:27 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 cmake amd64 3.22.1-1ubuntu1.22.04.2 [5010 kB]
+#5 15.52 Get:28 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 curl amd64 7.81.0-1ubuntu1.20 [194 kB]
+#5 15.54 Get:29 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl3-gnutls amd64 7.81.0-1ubuntu1.20 [284 kB]
+#5 15.57 Get:30 http://archive.ubuntu.com/ubuntu jammy/main amd64 liberror-perl all 0.17029-1 [26.5 kB]
+#5 15.57 Get:31 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git-man all 1:2.34.1-1ubuntu1.15 [955 kB]
+#5 15.69 Get:32 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git amd64 1:2.34.1-1ubuntu1.15 [3166 kB]
+#5 16.02 Get:33 http://archive.ubuntu.com/ubuntu jammy/main amd64 libonig5 amd64 6.9.7.1-2build1 [172 kB]
+#5 16.03 Get:34 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libjq1 amd64 1.6-2.1ubuntu3.1 [133 kB]
+#5 16.04 Get:35 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 jq amd64 1.6-2.1ubuntu3.1 [52.5 kB]
+#5 16.05 Get:36 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1-dev amd64 2.4.7-1ubuntu0.6 [148 kB]
+#5 16.06 Get:37 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjs-jquery all 3.6.0+dfsg+~3.5.13-1 [321 kB]
+#5 16.19 Get:38 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjs-underscore all 1.13.2~dfsg-2 [118 kB]
+#5 16.20 Get:39 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjs-sphinxdoc all 4.3.2-1 [139 kB]
+#5 16.22 Get:40 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10 amd64 3.10.12-1~22.04.11 [1949 kB]
+#5 16.61 Get:41 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 zlib1g-dev amd64 1:1.2.11.dfsg-2ubuntu9.2 [164 kB]
+#5 16.68 Get:42 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-dev amd64 3.10.12-1~22.04.11 [4764 kB]
+#5 17.15 Get:43 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3-dev amd64 3.10.6-1~22.04.1 [7064 B]
+#5 17.15 Get:44 http://archive.ubuntu.com/ubuntu jammy/universe amd64 ninja-build amd64 1.10.1-1 [111 kB]
+#5 17.16 Get:45 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-dev amd64 3.10.12-1~22.04.11 [508 kB]
+#5 17.22 Get:46 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-lib2to3 all 3.10.8-1~22.04 [77.6 kB]
+#5 17.23 Get:47 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-distutils all 3.10.8-1~22.04 [139 kB]
+#5 17.25 Get:48 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-dev amd64 3.10.6-1~22.04.1 [26.0 kB]
+#5 17.26 Get:49 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-setuptools all 59.6.0-1.2ubuntu0.22.04.3 [340 kB]
+#5 17.29 Get:50 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-wheel all 0.37.1-2ubuntu0.22.04.1 [32.0 kB]
+#5 17.29 Get:51 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-pip all 22.0.2+dfsg-1ubuntu0.6 [1306 kB]
+#5 17.44 Get:52 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-pip-whl all 22.0.2+dfsg-1ubuntu0.6 [1680 kB]
+#5 17.66 Get:53 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-setuptools-whl all 59.6.0-1.2ubuntu0.22.04.3 [789 kB]
+#5 17.76 Get:54 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3.10-venv amd64 3.10.12-1~22.04.11 [5726 B]
+#5 17.76 Get:55 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-venv amd64 3.10.6-1~22.04.1 [1042 B]
+#5 17.86 debconf: delaying package configuration, since apt-utils is not installed
+#5 17.87 Fetched 43.4 MB in 11s (3997 kB/s)
+#5 17.88 Selecting previously unselected package libpython3.10-minimal:amd64.
+#5 17.88 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 14926 files and directories currently installed.)
+#5 17.90 Preparing to unpack .../libpython3.10-minimal_3.10.12-1~22.04.11_amd64.deb ...
+#5 17.90 Unpacking libpython3.10-minimal:amd64 (3.10.12-1~22.04.11) ...
+#5 17.93 Selecting previously unselected package libexpat1:amd64.
+#5 17.93 Preparing to unpack .../libexpat1_2.4.7-1ubuntu0.6_amd64.deb ...
+#5 17.93 Unpacking libexpat1:amd64 (2.4.7-1ubuntu0.6) ...
+#5 17.95 Selecting previously unselected package python3.10-minimal.
+#5 17.95 Preparing to unpack .../python3.10-minimal_3.10.12-1~22.04.11_amd64.deb ...
+#5 17.95 Unpacking python3.10-minimal (3.10.12-1~22.04.11) ...
+#5 17.97 Setting up libpython3.10-minimal:amd64 (3.10.12-1~22.04.11) ...
+#5 17.98 Setting up libexpat1:amd64 (2.4.7-1ubuntu0.6) ...
+#5 17.98 Setting up python3.10-minimal (3.10.12-1~22.04.11) ...
+#5 18.25 Selecting previously unselected package python3-minimal.
+#5 18.25 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 15230 files and directories currently installed.)
+#5 18.25 Preparing to unpack .../0-python3-minimal_3.10.6-1~22.04.1_amd64.deb ...
+#5 18.25 Unpacking python3-minimal (3.10.6-1~22.04.1) ...
+#5 18.26 Selecting previously unselected package media-types.
+#5 18.26 Preparing to unpack .../1-media-types_7.0.0_all.deb ...
+#5 18.26 Unpacking media-types (7.0.0) ...
+#5 18.27 Selecting previously unselected package libmpdec3:amd64.
+#5 18.27 Preparing to unpack .../2-libmpdec3_2.5.1-2build2_amd64.deb ...
+#5 18.27 Unpacking libmpdec3:amd64 (2.5.1-2build2) ...
+#5 18.28 Selecting previously unselected package libpython3.10-stdlib:amd64.
+#5 18.28 Preparing to unpack .../3-libpython3.10-stdlib_3.10.12-1~22.04.11_amd64.deb ...
+#5 18.28 Unpacking libpython3.10-stdlib:amd64 (3.10.12-1~22.04.11) ...
+#5 18.31 Selecting previously unselected package python3.10.
+#5 18.31 Preparing to unpack .../4-python3.10_3.10.12-1~22.04.11_amd64.deb ...
+#5 18.31 Unpacking python3.10 (3.10.12-1~22.04.11) ...
+#5 18.32 Selecting previously unselected package libpython3-stdlib:amd64.
+#5 18.32 Preparing to unpack .../5-libpython3-stdlib_3.10.6-1~22.04.1_amd64.deb ...
+#5 18.32 Unpacking libpython3-stdlib:amd64 (3.10.6-1~22.04.1) ...
+#5 18.33 Setting up python3-minimal (3.10.6-1~22.04.1) ...
+#5 18.39 Selecting previously unselected package python3.
+#5 18.39 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 15631 files and directories currently installed.)
+#5 18.39 Preparing to unpack .../00-python3_3.10.6-1~22.04.1_amd64.deb ...
+#5 18.39 Unpacking python3 (3.10.6-1~22.04.1) ...
+#5 18.40 Selecting previously unselected package libicu70:amd64.
+#5 18.40 Preparing to unpack .../01-libicu70_70.1-2_amd64.deb ...
+#5 18.40 Unpacking libicu70:amd64 (70.1-2) ...
+#5 18.46 Selecting previously unselected package libxml2:amd64.
+#5 18.46 Preparing to unpack .../02-libxml2_2.9.13+dfsg-1ubuntu0.8_amd64.deb ...
+#5 18.46 Unpacking libxml2:amd64 (2.9.13+dfsg-1ubuntu0.8) ...
+#5 18.47 Selecting previously unselected package python3-pkg-resources.
+#5 18.47 Preparing to unpack .../03-python3-pkg-resources_59.6.0-1.2ubuntu0.22.04.3_all.deb ...
+#5 18.47 Unpacking python3-pkg-resources (59.6.0-1.2ubuntu0.22.04.3) ...
+#5 18.48 Selecting previously unselected package libnghttp2-14:amd64.
+#5 18.48 Preparing to unpack .../04-libnghttp2-14_1.43.0-1ubuntu0.2_amd64.deb ...
+#5 18.48 Unpacking libnghttp2-14:amd64 (1.43.0-1ubuntu0.2) ...
+#5 18.49 Selecting previously unselected package libpsl5:amd64.
+#5 18.49 Preparing to unpack .../05-libpsl5_0.21.0-1.2build2_amd64.deb ...
+#5 18.49 Unpacking libpsl5:amd64 (0.21.0-1.2build2) ...
+#5 18.50 Selecting previously unselected package libuv1:amd64.
+#5 18.50 Preparing to unpack .../06-libuv1_1.43.0-1ubuntu0.1_amd64.deb ...
+#5 18.50 Unpacking libuv1:amd64 (1.43.0-1ubuntu0.1) ...
+#5 18.51 Selecting previously unselected package libarchive13:amd64.
+#5 18.51 Preparing to unpack .../07-libarchive13_3.6.0-1ubuntu1.5_amd64.deb ...
+#5 18.51 Unpacking libarchive13:amd64 (3.6.0-1ubuntu1.5) ...
+#5 18.52 Selecting previously unselected package libbrotli1:amd64.
+#5 18.52 Preparing to unpack .../08-libbrotli1_1.0.9-2build6_amd64.deb ...
+#5 18.52 Unpacking libbrotli1:amd64 (1.0.9-2build6) ...
+#5 18.53 Selecting previously unselected package librtmp1:amd64.
+#5 18.53 Preparing to unpack .../09-librtmp1_2.4+20151223.gitfa8646d.1-2build4_amd64.deb ...
+#5 18.53 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build4) ...
+#5 18.54 Selecting previously unselected package libssh-4:amd64.
+#5 18.54 Preparing to unpack .../10-libssh-4_0.9.6-2ubuntu0.22.04.4_amd64.deb ...
+#5 18.54 Unpacking libssh-4:amd64 (0.9.6-2ubuntu0.22.04.4) ...
+#5 18.55 Selecting previously unselected package libcurl4:amd64.
+#5 18.55 Preparing to unpack .../11-libcurl4_7.81.0-1ubuntu1.20_amd64.deb ...
+#5 18.55 Unpacking libcurl4:amd64 (7.81.0-1ubuntu1.20) ...
+#5 18.56 Selecting previously unselected package libjsoncpp25:amd64.
+#5 18.56 Preparing to unpack .../12-libjsoncpp25_1.9.5-3_amd64.deb ...
+#5 18.56 Unpacking libjsoncpp25:amd64 (1.9.5-3) ...
+#5 18.57 Selecting previously unselected package librhash0:amd64.
+#5 18.57 Preparing to unpack .../13-librhash0_1.4.2-1ubuntu1_amd64.deb ...
+#5 18.57 Unpacking librhash0:amd64 (1.4.2-1ubuntu1) ...
+#5 18.58 Selecting previously unselected package dh-elpa-helper.
+#5 18.58 Preparing to unpack .../14-dh-elpa-helper_2.0.9ubuntu1_all.deb ...
+#5 18.58 Unpacking dh-elpa-helper (2.0.9ubuntu1) ...
+#5 18.59 Selecting previously unselected package emacsen-common.
+#5 18.59 Preparing to unpack .../15-emacsen-common_3.0.4_all.deb ...
+#5 18.60 Unpacking emacsen-common (3.0.4) ...
+#5 18.61 Selecting previously unselected package cmake-data.
+#5 18.61 Preparing to unpack .../16-cmake-data_3.22.1-1ubuntu1.22.04.2_all.deb ...
+#5 18.61 Unpacking cmake-data (3.22.1-1ubuntu1.22.04.2) ...
+#5 18.70 Selecting previously unselected package cmake.
+#5 18.70 Preparing to unpack .../17-cmake_3.22.1-1ubuntu1.22.04.2_amd64.deb ...
+#5 18.70 Unpacking cmake (3.22.1-1ubuntu1.22.04.2) ...
+#5 18.73 Selecting previously unselected package curl.
+#5 18.74 Preparing to unpack .../18-curl_7.81.0-1ubuntu1.20_amd64.deb ...
+#5 18.74 Unpacking curl (7.81.0-1ubuntu1.20) ...
+#5 18.75 Selecting previously unselected package libcurl3-gnutls:amd64.
+#5 18.75 Preparing to unpack .../19-libcurl3-gnutls_7.81.0-1ubuntu1.20_amd64.deb ...
+#5 18.75 Unpacking libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.20) ...
+#5 18.76 Selecting previously unselected package liberror-perl.
+#5 18.76 Preparing to unpack .../20-liberror-perl_0.17029-1_all.deb ...
+#5 18.76 Unpacking liberror-perl (0.17029-1) ...
+#5 18.77 Selecting previously unselected package git-man.
+#5 18.77 Preparing to unpack .../21-git-man_1%3a2.34.1-1ubuntu1.15_all.deb ...
+#5 18.77 Unpacking git-man (1:2.34.1-1ubuntu1.15) ...
+#5 18.78 Selecting previously unselected package git.
+#5 18.78 Preparing to unpack .../22-git_1%3a2.34.1-1ubuntu1.15_amd64.deb ...
+#5 18.78 Unpacking git (1:2.34.1-1ubuntu1.15) ...
+#5 18.82 Selecting previously unselected package libonig5:amd64.
+#5 18.82 Preparing to unpack .../23-libonig5_6.9.7.1-2build1_amd64.deb ...
+#5 18.82 Unpacking libonig5:amd64 (6.9.7.1-2build1) ...
+#5 18.83 Selecting previously unselected package libjq1:amd64.
+#5 18.83 Preparing to unpack .../24-libjq1_1.6-2.1ubuntu3.1_amd64.deb ...
+#5 18.83 Unpacking libjq1:amd64 (1.6-2.1ubuntu3.1) ...
+#5 18.84 Selecting previously unselected package jq.
+#5 18.84 Preparing to unpack .../25-jq_1.6-2.1ubuntu3.1_amd64.deb ...
+#5 18.84 Unpacking jq (1.6-2.1ubuntu3.1) ...
+#5 18.85 Selecting previously unselected package libexpat1-dev:amd64.
+#5 18.85 Preparing to unpack .../26-libexpat1-dev_2.4.7-1ubuntu0.6_amd64.deb ...
+#5 18.85 Unpacking libexpat1-dev:amd64 (2.4.7-1ubuntu0.6) ...
+#5 18.86 Selecting previously unselected package libjs-jquery.
+#5 18.86 Preparing to unpack .../27-libjs-jquery_3.6.0+dfsg+~3.5.13-1_all.deb ...
+#5 18.86 Unpacking libjs-jquery (3.6.0+dfsg+~3.5.13-1) ...
+#5 18.87 Selecting previously unselected package libjs-underscore.
+#5 18.87 Preparing to unpack .../28-libjs-underscore_1.13.2~dfsg-2_all.deb ...
+#5 18.87 Unpacking libjs-underscore (1.13.2~dfsg-2) ...
+#5 18.88 Selecting previously unselected package libjs-sphinxdoc.
+#5 18.88 Preparing to unpack .../29-libjs-sphinxdoc_4.3.2-1_all.deb ...
+#5 18.88 Unpacking libjs-sphinxdoc (4.3.2-1) ...
+#5 18.89 Selecting previously unselected package libpython3.10:amd64.
+#5 18.89 Preparing to unpack .../30-libpython3.10_3.10.12-1~22.04.11_amd64.deb ...
+#5 18.89 Unpacking libpython3.10:amd64 (3.10.12-1~22.04.11) ...
+#5 18.91 Selecting previously unselected package zlib1g-dev:amd64.
+#5 18.91 Preparing to unpack .../31-zlib1g-dev_1%3a1.2.11.dfsg-2ubuntu9.2_amd64.deb ...
+#5 18.91 Unpacking zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+#5 18.92 Selecting previously unselected package libpython3.10-dev:amd64.
+#5 18.92 Preparing to unpack .../32-libpython3.10-dev_3.10.12-1~22.04.11_amd64.deb ...
+#5 18.92 Unpacking libpython3.10-dev:amd64 (3.10.12-1~22.04.11) ...
+#5 18.96 Selecting previously unselected package libpython3-dev:amd64.
+#5 18.96 Preparing to unpack .../33-libpython3-dev_3.10.6-1~22.04.1_amd64.deb ...
+#5 18.96 Unpacking libpython3-dev:amd64 (3.10.6-1~22.04.1) ...
+#5 18.97 Selecting previously unselected package ninja-build.
+#5 18.97 Preparing to unpack .../34-ninja-build_1.10.1-1_amd64.deb ...
+#5 18.97 Unpacking ninja-build (1.10.1-1) ...
+#5 18.98 Selecting previously unselected package python3.10-dev.
+#5 18.98 Preparing to unpack .../35-python3.10-dev_3.10.12-1~22.04.11_amd64.deb ...
+#5 18.98 Unpacking python3.10-dev (3.10.12-1~22.04.11) ...
+#5 18.99 Selecting previously unselected package python3-lib2to3.
+#5 18.99 Preparing to unpack .../36-python3-lib2to3_3.10.8-1~22.04_all.deb ...
+#5 18.99 Unpacking python3-lib2to3 (3.10.8-1~22.04) ...
+#5 19.00 Selecting previously unselected package python3-distutils.
+#5 19.00 Preparing to unpack .../37-python3-distutils_3.10.8-1~22.04_all.deb ...
+#5 19.00 Unpacking python3-distutils (3.10.8-1~22.04) ...
+#5 19.02 Selecting previously unselected package python3-dev.
+#5 19.02 Preparing to unpack .../38-python3-dev_3.10.6-1~22.04.1_amd64.deb ...
+#5 19.02 Unpacking python3-dev (3.10.6-1~22.04.1) ...
+#5 19.03 Selecting previously unselected package python3-setuptools.
+#5 19.03 Preparing to unpack .../39-python3-setuptools_59.6.0-1.2ubuntu0.22.04.3_all.deb ...
+#5 19.03 Unpacking python3-setuptools (59.6.0-1.2ubuntu0.22.04.3) ...
+#5 19.04 Selecting previously unselected package python3-wheel.
+#5 19.04 Preparing to unpack .../40-python3-wheel_0.37.1-2ubuntu0.22.04.1_all.deb ...
+#5 19.04 Unpacking python3-wheel (0.37.1-2ubuntu0.22.04.1) ...
+#5 19.05 Selecting previously unselected package python3-pip.
+#5 19.05 Preparing to unpack .../41-python3-pip_22.0.2+dfsg-1ubuntu0.6_all.deb ...
+#5 19.05 Unpacking python3-pip (22.0.2+dfsg-1ubuntu0.6) ...
+#5 19.08 Selecting previously unselected package python3-pip-whl.
+#5 19.09 Preparing to unpack .../42-python3-pip-whl_22.0.2+dfsg-1ubuntu0.6_all.deb ...
+#5 19.09 Unpacking python3-pip-whl (22.0.2+dfsg-1ubuntu0.6) ...
+#5 19.10 Selecting previously unselected package python3-setuptools-whl.
+#5 19.10 Preparing to unpack .../43-python3-setuptools-whl_59.6.0-1.2ubuntu0.22.04.3_all.deb ...
+#5 19.10 Unpacking python3-setuptools-whl (59.6.0-1.2ubuntu0.22.04.3) ...
+#5 19.11 Selecting previously unselected package python3.10-venv.
+#5 19.11 Preparing to unpack .../44-python3.10-venv_3.10.12-1~22.04.11_amd64.deb ...
+#5 19.11 Unpacking python3.10-venv (3.10.12-1~22.04.11) ...
+#5 19.12 Selecting previously unselected package python3-venv.
+#5 19.12 Preparing to unpack .../45-python3-venv_3.10.6-1~22.04.1_amd64.deb ...
+#5 19.12 Unpacking python3-venv (3.10.6-1~22.04.1) ...
+#5 19.13 Setting up media-types (7.0.0) ...
+#5 19.13 Setting up python3-setuptools-whl (59.6.0-1.2ubuntu0.22.04.3) ...
+#5 19.13 Setting up libpsl5:amd64 (0.21.0-1.2build2) ...
+#5 19.14 Setting up python3-pip-whl (22.0.2+dfsg-1ubuntu0.6) ...
+#5 19.14 Setting up libbrotli1:amd64 (1.0.9-2build6) ...
+#5 19.14 Setting up libnghttp2-14:amd64 (1.43.0-1ubuntu0.2) ...
+#5 19.14 Setting up ninja-build (1.10.1-1) ...
+#5 19.15 Setting up liberror-perl (0.17029-1) ...
+#5 19.15 Setting up libuv1:amd64 (1.43.0-1ubuntu0.1) ...
+#5 19.15 Setting up libexpat1-dev:amd64 (2.4.7-1ubuntu0.6) ...
+#5 19.15 Setting up emacsen-common (3.0.4) ...
+#5 19.17 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build4) ...
+#5 19.17 Setting up dh-elpa-helper (2.0.9ubuntu1) ...
+#5 19.17 Setting up libjsoncpp25:amd64 (1.9.5-3) ...
+#5 19.17 Setting up libssh-4:amd64 (0.9.6-2ubuntu0.22.04.4) ...
+#5 19.18 Setting up zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+#5 19.18 Setting up librhash0:amd64 (1.4.2-1ubuntu1) ...
+#5 19.18 Setting up libmpdec3:amd64 (2.5.1-2build2) ...
+#5 19.18 Setting up libcurl4:amd64 (7.81.0-1ubuntu1.20) ...
+#5 19.19 Setting up git-man (1:2.34.1-1ubuntu1.15) ...
+#5 19.19 Setting up cmake-data (3.22.1-1ubuntu1.22.04.2) ...
+#5 19.20 Setting up curl (7.81.0-1ubuntu1.20) ...
+#5 19.20 Setting up libjs-jquery (3.6.0+dfsg+~3.5.13-1) ...
+#5 19.21 Setting up libonig5:amd64 (6.9.7.1-2build1) ...
+#5 19.21 Setting up libjs-underscore (1.13.2~dfsg-2) ...
+#5 19.21 Setting up libicu70:amd64 (70.1-2) ...
+#5 19.21 Setting up libjq1:amd64 (1.6-2.1ubuntu3.1) ...
+#5 19.22 Setting up libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.20) ...
+#5 19.22 Setting up libpython3.10-stdlib:amd64 (3.10.12-1~22.04.11) ...
+#5 19.22 Setting up git (1:2.34.1-1ubuntu1.15) ...
+#5 19.23 Setting up libjs-sphinxdoc (4.3.2-1) ...
+#5 19.23 Setting up jq (1.6-2.1ubuntu3.1) ...
+#5 19.23 Setting up libxml2:amd64 (2.9.13+dfsg-1ubuntu0.8) ...
+#5 19.23 Setting up libpython3-stdlib:amd64 (3.10.6-1~22.04.1) ...
+#5 19.24 Setting up libpython3.10:amd64 (3.10.12-1~22.04.11) ...
+#5 19.24 Setting up python3.10 (3.10.12-1~22.04.11) ...
+#5 19.50 Setting up libarchive13:amd64 (3.6.0-1ubuntu1.5) ...
+#5 19.50 Setting up python3 (3.10.6-1~22.04.1) ...
+#5 19.53 Setting up libpython3.10-dev:amd64 (3.10.12-1~22.04.11) ...
+#5 19.54 Setting up python3.10-dev (3.10.12-1~22.04.11) ...
+#5 19.54 Setting up cmake (3.22.1-1ubuntu1.22.04.2) ...
+#5 19.54 Setting up python3-lib2to3 (3.10.8-1~22.04) ...
+#5 19.58 Setting up python3-pkg-resources (59.6.0-1.2ubuntu0.22.04.3) ...
+#5 19.65 Setting up python3-distutils (3.10.8-1~22.04) ...
+#5 19.69 Setting up libpython3-dev:amd64 (3.10.6-1~22.04.1) ...
+#5 19.69 Setting up python3.10-venv (3.10.12-1~22.04.11) ...
+#5 19.71 Setting up python3-setuptools (59.6.0-1.2ubuntu0.22.04.3) ...
+#5 19.84 Setting up python3-wheel (0.37.1-2ubuntu0.22.04.1) ...
+#5 19.88 Setting up python3-venv (3.10.6-1~22.04.1) ...
+#5 19.89 Setting up python3-dev (3.10.6-1~22.04.1) ...
+#5 19.89 Setting up python3-pip (22.0.2+dfsg-1ubuntu0.6) ...
+#5 20.25 Processing triggers for libc-bin (2.35-0ubuntu3.8) ...
+#5 DONE 20.4s
+
+#6 [3/9] RUN python3 -m pip install --upgrade pip && pip install uv
+#6 0.213 Requirement already satisfied: pip in /usr/lib/python3/dist-packages (22.0.2)
+#6 0.282 Collecting pip
+#6 0.318   Downloading pip-25.2-py3-none-any.whl (1.8 MB)
+#6 0.637      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 5.5 MB/s eta 0:00:00
+#6 0.643 Installing collected packages: pip
+#6 0.643   Attempting uninstall: pip
+#6 0.643     Found existing installation: pip 22.0.2
+#6 0.644     Not uninstalling pip at /usr/lib/python3/dist-packages, outside environment /usr
+#6 0.644     Can't uninstall 'pip'. No files were found to uninstall.
+#6 0.924 Successfully installed pip-25.2
+#6 0.924 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#6 1.237 Collecting uv
+#6 1.254   Downloading uv-0.8.15-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+#6 1.263 Downloading uv-0.8.15-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (21.0 MB)
+#6 3.066    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 21.0/21.0 MB 11.7 MB/s  0:00:01
+#6 3.081 Installing collected packages: uv
+#6 3.269 Successfully installed uv-0.8.15
+#6 3.269 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#6 DONE 3.3s
+
+#7 [4/9] RUN pip install --pre torch torchvision torchaudio     --index-url https://download.pytorch.org/whl/nightly/cu128
+#7 0.298 Looking in indexes: https://download.pytorch.org/whl/nightly/cu128
+#7 2.053 Collecting torch
+#7 2.078   Downloading https://download.pytorch.org/whl/nightly/cu128/torch-2.9.0.dev20250908%2Bcu128-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (30 kB)
+#7 4.512 Collecting torchvision
+#7 4.646   Downloading https://download.pytorch.org/whl/nightly/cu128/torchvision-0.24.0.dev20250908%2Bcu128-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (5.9 kB)
+#7 5.811 Collecting torchaudio
+#7 5.949   Downloading https://download.pytorch.org/whl/nightly/cu128/torchaudio-2.8.0.dev20250908%2Bcu128-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (6.9 kB)
+#7 6.180 Collecting filelock (from torch)
+#7 6.186   Downloading https://download.pytorch.org/whl/nightly/filelock-3.19.1-py3-none-any.whl.metadata (2.1 kB)
+#7 6.410 Collecting typing-extensions>=4.10.0 (from torch)
+#7 6.422   Downloading https://download.pytorch.org/whl/nightly/typing_extensions-4.14.1-py3-none-any.whl.metadata (3.0 kB)
+#7 7.096 Collecting sympy>=1.13.3 (from torch)
+#7 7.105   Downloading https://download.pytorch.org/whl/nightly/sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+#7 7.784 Collecting networkx>=2.5.1 (from torch)
+#7 7.790   Downloading https://download.pytorch.org/whl/nightly/networkx-3.5-py3-none-any.whl.metadata (6.3 kB)
+#7 8.473 Collecting jinja2 (from torch)
+#7 8.481   Downloading https://download.pytorch.org/whl/nightly/jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#7 9.057 Collecting fsspec>=0.8.5 (from torch)
+#7 9.067   Downloading https://download.pytorch.org/whl/nightly/fsspec-2025.7.0-py3-none-any.whl.metadata (12 kB)
+#7 9.689 Collecting nvidia-cuda-nvrtc-cu12==12.8.93 (from torch)
+#7 9.696   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+#7 10.29 Collecting nvidia-cuda-runtime-cu12==12.8.90 (from torch)
+#7 10.30   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cuda_runtime_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+#7 10.89 Collecting nvidia-cuda-cupti-cu12==12.8.90 (from torch)
+#7 10.90   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+#7 11.51 Collecting nvidia-cudnn-cu12==9.10.2.21 (from torch)
+#7 11.52   Downloading https://download.pytorch.org/whl/nightly/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_x86_64.whl.metadata (1.8 kB)
+#7 12.09 Collecting nvidia-cublas-cu12==12.8.4.1 (from torch)
+#7 12.10   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_x86_64.whl.metadata (1.7 kB)
+#7 12.69 Collecting nvidia-cufft-cu12==11.3.3.83 (from torch)
+#7 12.69   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+#7 13.28 Collecting nvidia-curand-cu12==10.3.9.90 (from torch)
+#7 13.28   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_curand_cu12-10.3.9.90-py3-none-manylinux_2_27_x86_64.whl.metadata (1.7 kB)
+#7 13.50 Collecting nvidia-cusolver-cu12==11.7.3.90 (from torch)
+#7 13.51   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_x86_64.whl.metadata (1.8 kB)
+#7 13.72 Collecting nvidia-cusparse-cu12==12.5.8.93 (from torch)
+#7 13.73   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.8 kB)
+#7 14.32 Collecting nvidia-cusparselt-cu12==0.7.1 (from torch)
+#7 14.32   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cusparselt_cu12-0.7.1-py3-none-manylinux2014_x86_64.whl.metadata (7.0 kB)
+#7 14.90 Collecting nvidia-nccl-cu12==2.27.5 (from torch)
+#7 14.91   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_nccl_cu12-2.27.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.0 kB)
+#7 15.53 Collecting nvidia-nvshmem-cu12==3.3.20 (from torch)
+#7 15.54   Downloading https://download.pytorch.org/whl/nightly/nvidia_nvshmem_cu12-3.3.20-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.1 kB)
+#7 16.15 Collecting nvidia-nvtx-cu12==12.8.90 (from torch)
+#7 16.15   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_nvtx_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.8 kB)
+#7 16.73 Collecting nvidia-nvjitlink-cu12==12.8.93 (from torch)
+#7 16.74   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_nvjitlink_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+#7 17.33 Collecting nvidia-cufile-cu12==1.13.1.3 (from torch)
+#7 17.34   Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+#7 17.94 Collecting pytorch-triton==3.4.0+gitf7888497 (from torch)
+#7 17.94   Downloading https://download.pytorch.org/whl/nightly/pytorch_triton-3.4.0%2Bgitf7888497-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (1.8 kB)
+#7 17.96 Requirement already satisfied: setuptools>=40.8.0 in /usr/lib/python3/dist-packages (from pytorch-triton==3.4.0+gitf7888497->torch) (59.6.0)
+#7 18.74 Collecting numpy (from torchvision)
+#7 18.75   Downloading https://download.pytorch.org/whl/nightly/numpy-2.1.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.3 MB)
+#7 20.37      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.3/16.3 MB 10.4 MB/s  0:00:01
+#7 21.17 Collecting pillow!=8.3.*,>=5.3.0 (from torchvision)
+#7 21.18   Downloading https://download.pytorch.org/whl/nightly/pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+#7 21.20 INFO: pip is looking at multiple versions of networkx to determine which version is compatible with other requirements. This could take a while.
+#7 21.20 Collecting networkx>=2.5.1 (from torch)
+#7 21.23   Downloading https://download.pytorch.org/whl/nightly/networkx-3.4.2-py3-none-any.whl (1.7 MB)
+#7 22.39      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 6.8 MB/s  0:00:01
+#7 22.99 Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch)
+#7 23.00   Downloading https://download.pytorch.org/whl/nightly/mpmath-1.3.0-py3-none-any.whl (536 kB)
+#7 23.07      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 6.2 MB/s  0:00:00
+#7 23.84 Collecting MarkupSafe>=2.0 (from jinja2->torch)
+#7 23.84   Downloading https://download.pytorch.org/whl/nightly/MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.0 kB)
+#7 23.86 Downloading https://download.pytorch.org/whl/nightly/cu128/torch-2.9.0.dev20250908%2Bcu128-cp310-cp310-manylinux_2_28_x86_64.whl (900.6 MB)
+#7 107.6    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 900.6/900.6 MB 14.7 MB/s  0:01:23
+#7 107.6 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_x86_64.whl (594.3 MB)
+#7 157.6    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 594.3/594.3 MB 13.7 MB/s  0:00:50
+#7 157.6 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (10.2 MB)
+#7 162.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 2.0 MB/s  0:00:05
+#7 162.7 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (88.0 MB)
+#7 170.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.0/88.0 MB 10.9 MB/s  0:00:08
+#7 170.8 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cuda_runtime_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (954 kB)
+#7 170.9    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 954.8/954.8 kB 13.1 MB/s  0:00:00
+#7 170.9 Downloading https://download.pytorch.org/whl/nightly/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_x86_64.whl (706.8 MB)
+#7 229.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 706.8/706.8 MB 13.9 MB/s  0:00:58
+#7 229.7 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (193.1 MB)
+#7 252.2    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 193.1/193.1 MB 9.3 MB/s  0:00:22
+#7 252.2 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+#7 252.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 15.0 MB/s  0:00:00
+#7 252.3 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_curand_cu12-10.3.9.90-py3-none-manylinux_2_27_x86_64.whl (63.6 MB)
+#7 256.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.6/63.6 MB 15.3 MB/s  0:00:04
+#7 256.5 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_x86_64.whl (267.5 MB)
+#7 288.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 267.5/267.5 MB 7.8 MB/s  0:00:32
+#7 288.7 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (288.2 MB)
+#7 308.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 288.2/288.2 MB 14.5 MB/s  0:00:19
+#7 308.5 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_cusparselt_cu12-0.7.1-py3-none-manylinux2014_x86_64.whl (287.2 MB)
+#7 335.9    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 287.2/287.2 MB 10.4 MB/s  0:00:27
+#7 335.9 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_nccl_cu12-2.27.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (322.3 MB)
+#7 368.1    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 322.3/322.3 MB 10.7 MB/s  0:00:32
+#7 368.1 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_nvjitlink_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (39.3 MB)
+#7 370.6    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 39.3/39.3 MB 15.7 MB/s  0:00:02
+#7 370.6 Downloading https://download.pytorch.org/whl/nightly/nvidia_nvshmem_cu12-3.3.20-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (124.7 MB)
+#7 378.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.7/124.7 MB 15.4 MB/s  0:00:08
+#7 378.7 Downloading https://download.pytorch.org/whl/nightly/cu128/nvidia_nvtx_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (89 kB)
+#7 378.7 Downloading https://download.pytorch.org/whl/nightly/pytorch_triton-3.4.0%2Bgitf7888497-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (155.5 MB)
+#7 394.0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.5/155.5 MB 10.1 MB/s  0:00:15
+#7 394.2 Downloading https://download.pytorch.org/whl/nightly/cu128/torchvision-0.24.0.dev20250908%2Bcu128-cp310-cp310-manylinux_2_28_x86_64.whl (8.2 MB)
+#7 396.2    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.2/8.2 MB 3.9 MB/s  0:00:02
+#7 396.3 Downloading https://download.pytorch.org/whl/nightly/cu128/torchaudio-2.8.0.dev20250908%2Bcu128-cp310-cp310-manylinux_2_28_x86_64.whl (2.0 MB)
+#7 396.5    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 9.8 MB/s  0:00:00
+#7 396.5 Downloading https://download.pytorch.org/whl/nightly/fsspec-2025.7.0-py3-none-any.whl (199 kB)
+#7 396.5 Downloading https://download.pytorch.org/whl/nightly/pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+#7 397.1    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 10.9 MB/s  0:00:00
+#7 397.1 Downloading https://download.pytorch.org/whl/nightly/sympy-1.14.0-py3-none-any.whl (6.3 MB)
+#7 397.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 10.8 MB/s  0:00:00
+#7 397.7 Downloading https://download.pytorch.org/whl/nightly/typing_extensions-4.14.1-py3-none-any.whl (43 kB)
+#7 397.7 Downloading https://download.pytorch.org/whl/nightly/filelock-3.19.1-py3-none-any.whl (15 kB)
+#7 397.7 Downloading https://download.pytorch.org/whl/nightly/jinja2-3.1.6-py3-none-any.whl (134 kB)
+#7 397.8 Downloading https://download.pytorch.org/whl/nightly/MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20 kB)
+#7 399.5 Installing collected packages: nvidia-cusparselt-cu12, mpmath, typing-extensions, sympy, pytorch-triton, pillow, nvidia-nvtx-cu12, nvidia-nvshmem-cu12, nvidia-nvjitlink-cu12, nvidia-nccl-cu12, nvidia-curand-cu12, nvidia-cufile-cu12, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cuda-cupti-cu12, nvidia-cublas-cu12, numpy, networkx, MarkupSafe, fsspec, filelock, nvidia-cusparse-cu12, nvidia-cufft-cu12, nvidia-cudnn-cu12, jinja2, nvidia-cusolver-cu12, torch, torchvision, torchaudio
+#7 425.6 
+#7 425.6 Successfully installed MarkupSafe-3.0.2 filelock-3.19.1 fsspec-2025.7.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.4.2 numpy-2.1.2 nvidia-cublas-cu12-12.8.4.1 nvidia-cuda-cupti-cu12-12.8.90 nvidia-cuda-nvrtc-cu12-12.8.93 nvidia-cuda-runtime-cu12-12.8.90 nvidia-cudnn-cu12-9.10.2.21 nvidia-cufft-cu12-11.3.3.83 nvidia-cufile-cu12-1.13.1.3 nvidia-curand-cu12-10.3.9.90 nvidia-cusolver-cu12-11.7.3.90 nvidia-cusparse-cu12-12.5.8.93 nvidia-cusparselt-cu12-0.7.1 nvidia-nccl-cu12-2.27.5 nvidia-nvjitlink-cu12-12.8.93 nvidia-nvshmem-cu12-3.3.20 nvidia-nvtx-cu12-12.8.90 pillow-11.3.0 pytorch-triton-3.4.0+gitf7888497 sympy-1.14.0 torch-2.9.0.dev20250908+cu128 torchaudio-2.8.0.dev20250908+cu128 torchvision-0.24.0.dev20250908+cu128 typing-extensions-4.14.1
+#7 425.6 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#7 DONE 426.3s
+
+#8 [5/9] RUN pip install --no-cache-dir "flashinfer-python==0.3.1"
+#8 0.338 Collecting flashinfer-python==0.3.1
+#8 0.358   Downloading flashinfer_python-0.3.1.tar.gz (3.8 MB)
+#8 1.644      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 2.8 MB/s  0:00:01
+#8 1.934   Installing build dependencies: started
+#8 3.148   Installing build dependencies: finished with status 'done'
+#8 3.148   Getting requirements to build wheel: started
+#8 3.261   Getting requirements to build wheel: finished with status 'done'
+#8 3.263   Installing backend dependencies: started
+#8 78.37   Installing backend dependencies: still running...
+#8 143.2   Installing backend dependencies: still running...
+#8 207.1   Installing backend dependencies: still running...
+#8 286.7   Installing backend dependencies: still running...
+#8 347.0   Installing backend dependencies: still running...
+#8 378.0   Installing backend dependencies: finished with status 'done'
+#8 378.0   Preparing metadata (pyproject.toml): started
+#8 378.1   Preparing metadata (pyproject.toml): finished with status 'done'
+#8 378.1 Requirement already satisfied: numpy in /usr/local/lib/python3.10/dist-packages (from flashinfer-python==0.3.1) (2.1.2)
+#8 378.1 Requirement already satisfied: torch in /usr/local/lib/python3.10/dist-packages (from flashinfer-python==0.3.1) (2.9.0.dev20250908+cu128)
+#8 378.2 Collecting ninja (from flashinfer-python==0.3.1)
+#8 378.2   Downloading ninja-1.13.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.1 kB)
+#8 378.2 Collecting requests (from flashinfer-python==0.3.1)
+#8 378.2   Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+#8 378.2 Collecting pynvml (from flashinfer-python==0.3.1)
+#8 378.2   Downloading pynvml-13.0.1-py3-none-any.whl.metadata (5.6 kB)
+#8 378.2 Collecting einops (from flashinfer-python==0.3.1)
+#8 378.2   Downloading einops-0.8.1-py3-none-any.whl.metadata (13 kB)
+#8 378.2 Collecting click (from flashinfer-python==0.3.1)
+#8 378.2   Downloading click-8.2.1-py3-none-any.whl.metadata (2.5 kB)
+#8 378.2 Collecting tqdm (from flashinfer-python==0.3.1)
+#8 378.3   Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+#8 378.3 Collecting tabulate (from flashinfer-python==0.3.1)
+#8 378.3   Downloading tabulate-0.9.0-py3-none-any.whl.metadata (34 kB)
+#8 378.3 Collecting packaging>=24.2 (from flashinfer-python==0.3.1)
+#8 378.3   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#8 378.3 Collecting nvidia-cudnn-frontend>=1.13.0 (from flashinfer-python==0.3.1)
+#8 378.3   Downloading nvidia_cudnn_frontend-1.14.1-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.7 kB)
+#8 378.3 Collecting nvidia-ml-py>=12.0.0 (from pynvml->flashinfer-python==0.3.1)
+#8 378.3   Downloading nvidia_ml_py-13.580.65-py3-none-any.whl.metadata (9.6 kB)
+#8 378.4 Collecting charset_normalizer<4,>=2 (from requests->flashinfer-python==0.3.1)
+#8 378.4   Downloading charset_normalizer-3.4.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (36 kB)
+#8 378.4 Collecting idna<4,>=2.5 (from requests->flashinfer-python==0.3.1)
+#8 378.4   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#8 378.4 Collecting urllib3<3,>=1.21.1 (from requests->flashinfer-python==0.3.1)
+#8 378.4   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+#8 378.4 Collecting certifi>=2017.4.17 (from requests->flashinfer-python==0.3.1)
+#8 378.4   Downloading certifi-2025.8.3-py3-none-any.whl.metadata (2.4 kB)
+#8 378.4 Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (3.19.1)
+#8 378.4 Requirement already satisfied: typing-extensions>=4.10.0 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (4.14.1)
+#8 378.4 Requirement already satisfied: sympy>=1.13.3 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (1.14.0)
+#8 378.4 Requirement already satisfied: networkx>=2.5.1 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (3.4.2)
+#8 378.4 Requirement already satisfied: jinja2 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (3.1.6)
+#8 378.4 Requirement already satisfied: fsspec>=0.8.5 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (2025.7.0)
+#8 378.4 Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (12.8.93)
+#8 378.4 Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (12.8.90)
+#8 378.4 Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (12.8.90)
+#8 378.4 Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (9.10.2.21)
+#8 378.4 Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (12.8.4.1)
+#8 378.4 Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (11.3.3.83)
+#8 378.4 Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (10.3.9.90)
+#8 378.4 Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (11.7.3.90)
+#8 378.4 Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (12.5.8.93)
+#8 378.4 Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (0.7.1)
+#8 378.4 Requirement already satisfied: nvidia-nccl-cu12==2.27.5 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (2.27.5)
+#8 378.4 Requirement already satisfied: nvidia-nvshmem-cu12==3.3.20 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (3.3.20)
+#8 378.4 Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (12.8.90)
+#8 378.4 Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (12.8.93)
+#8 378.4 Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (1.13.1.3)
+#8 378.4 Requirement already satisfied: pytorch-triton==3.4.0+gitf7888497 in /usr/local/lib/python3.10/dist-packages (from torch->flashinfer-python==0.3.1) (3.4.0+gitf7888497)
+#8 378.4 Requirement already satisfied: setuptools>=40.8.0 in /usr/lib/python3/dist-packages (from pytorch-triton==3.4.0+gitf7888497->torch->flashinfer-python==0.3.1) (59.6.0)
+#8 378.4 Requirement already satisfied: mpmath<1.4,>=1.1.0 in /usr/local/lib/python3.10/dist-packages (from sympy>=1.13.3->torch->flashinfer-python==0.3.1) (1.3.0)
+#8 378.4 Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.10/dist-packages (from jinja2->torch->flashinfer-python==0.3.1) (3.0.2)
+#8 378.5 Downloading nvidia_cudnn_frontend-1.14.1-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.8 MB)
+#8 378.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 7.6 MB/s  0:00:00
+#8 378.7 Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#8 378.7 Downloading click-8.2.1-py3-none-any.whl (102 kB)
+#8 378.7 Downloading einops-0.8.1-py3-none-any.whl (64 kB)
+#8 378.7 Downloading ninja-1.13.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (180 kB)
+#8 378.8 Downloading pynvml-13.0.1-py3-none-any.whl (28 kB)
+#8 378.8 Downloading nvidia_ml_py-13.580.65-py3-none-any.whl (48 kB)
+#8 378.8 Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+#8 378.8 Downloading charset_normalizer-3.4.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (152 kB)
+#8 378.8 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#8 378.8 Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+#8 378.8 Downloading certifi-2025.8.3-py3-none-any.whl (161 kB)
+#8 378.9 Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
+#8 378.9 Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+#8 378.9 Building wheels for collected packages: flashinfer-python
+#8 378.9   Building wheel for flashinfer-python (pyproject.toml): started
+#8 379.6   Building wheel for flashinfer-python (pyproject.toml): finished with status 'done'
+#8 379.6   Created wheel for flashinfer-python: filename=flashinfer_python-0.3.1-py3-none-any.whl size=5680405 sha256=5d799cc0ed5cd2baf4f45689c5202ae657797e9d80548ef62ed90249532316ef
+#8 379.6   Stored in directory: /tmp/pip-ephem-wheel-cache-_irrr98i/wheels/93/94/fa/93ca82e01c0da9c64f02ec2ec4123c11220104ff60a4357be3
+#8 379.6 Successfully built flashinfer-python
+#8 379.6 Installing collected packages: nvidia-ml-py, urllib3, tqdm, tabulate, pynvml, packaging, nvidia-cudnn-frontend, ninja, idna, einops, click, charset_normalizer, certifi, requests, flashinfer-python
+#8 380.0 
+#8 380.0 Successfully installed certifi-2025.8.3 charset_normalizer-3.4.3 click-8.2.1 einops-0.8.1 flashinfer-python-0.3.1 idna-3.10 ninja-1.13.0 nvidia-cudnn-frontend-1.14.1 nvidia-ml-py-13.580.65 packaging-25.0 pynvml-13.0.1 requests-2.32.5 tabulate-0.9.0 tqdm-4.67.1 urllib3-2.5.0
+#8 380.0 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 DONE 380.3s
+
+#9 [6/9] RUN git clone --depth 1 https://github.com/vllm-project/vllm.git /opt/vllm
+#9 0.104 Cloning into '/opt/vllm'...
+#9 DONE 2.8s
+
+#10 [7/9] WORKDIR /opt/vllm
+#10 DONE 0.0s
+
+#11 [8/9] RUN mkdir -p /var/cache/torch_extensions
+#11 DONE 0.1s
+
+#12 [9/9] RUN uv pip install --system -e .
+#12 0.137 Using Python 3.10.12 environment at: /usr
+#12 345.3 Resolved 142 packages in 5m 45s
+#12 345.3    Building vllm @ file:///opt/vllm
+#12 345.3 Downloading tokenizers (3.2MiB)
+#12 345.3 Downloading pydantic-core (1.9MiB)
+#12 345.3 Downloading sentencepiece (1.3MiB)
+#12 345.3 Downloading setuptools (1.1MiB)
+#12 345.3 Downloading hf-xet (3.0MiB)
+#12 345.3 Downloading aiohttp (1.6MiB)
+#12 345.3 Downloading numba (3.6MiB)
+#12 345.3 Downloading pygments (1.2MiB)
+#12 345.3 Downloading outlines-core (2.2MiB)
+#12 345.3 Downloading openai-harmony (2.9MiB)
+#12 345.3 Downloading transformers (11.1MiB)
+#12 345.3 Downloading uvloop (3.6MiB)
+#12 345.3 Downloading cupy-cuda12x (107.0MiB)
+#12 345.3 Downloading torchaudio (3.8MiB)
+#12 345.3 Downloading xformers (111.8MiB)
+#12 345.3 Downloading pycountry (6.0MiB)
+#12 345.3 Downloading opencv-python-headless (51.5MiB)
+#12 345.3 Downloading soundfile (1.3MiB)
+#12 345.3 Downloading mistral-common (6.2MiB)
+#12 345.3 Downloading scipy (35.9MiB)
+#12 345.3 Downloading ray (66.7MiB)
+#12 345.3 Downloading torchvision (8.2MiB)
+#12 345.3 Downloading tiktoken (1.1MiB)
+#12 345.3 Downloading xgrammar (7.5MiB)
+#12 345.3 Downloading llvmlite (40.4MiB)
+#12 345.3 Downloading llguidance (14.3MiB)
+#12 348.4  Downloading tiktoken
+#12 348.4  Downloading setuptools
+#12 348.5  Downloading soundfile
+#12 348.5  Downloading pygments
+#12 348.7  Downloading sentencepiece
+#12 349.1  Downloading aiohttp
+#12 349.6  Downloading pydantic-core
+#12 349.9  Downloading outlines-core
+#12 350.8  Downloading openai-harmony
+#12 350.9  Downloading hf-xet
+#12 351.1  Downloading tokenizers
+#12 351.6  Downloading numba
+#12 351.7  Downloading uvloop
+#12 351.8  Downloading torchaudio
+#12 363.3  Downloading pycountry
+#12 363.3  Downloading mistral-common
+#12 366.1  Downloading xgrammar
+#12 366.6  Downloading torchvision
+#12 368.7  Downloading transformers
+#12 372.0  Downloading llguidance
+#12 390.9  Downloading scipy
+#12 403.4  Downloading llvmlite
+#12 407.0  Downloading opencv-python-headless
+#12 410.2  Downloading ray
+#12 415.5  Downloading cupy-cuda12x
+#12 415.8  Downloading xformers
+#12 12253.4       Built vllm @ file:///opt/vllm
+#12 12253.4 Prepared 106 packages in 198m 28s
+#12 12253.9 Uninstalled 4 packages in 502ms
+#12 12254.0 Installed 109 packages in 82ms
+#12 12254.0  + aiohappyeyeballs==2.6.1
+#12 12254.0  + aiohttp==3.12.15
+#12 12254.0  + aiosignal==1.4.0
+#12 12254.0  + annotated-types==0.7.0
+#12 12254.0  + anyio==4.10.0
+#12 12254.0  + astor==0.8.1
+#12 12254.0  + async-timeout==5.0.1
+#12 12254.0  + attrs==25.3.0
+#12 12254.0  + blake3==1.0.5
+#12 12254.0  + cachetools==6.2.0
+#12 12254.0  + cbor2==5.7.0
+#12 12254.0  + cffi==2.0.0
+#12 12254.0  + cloudpickle==3.1.1
+#12 12254.0  + compressed-tensors==0.11.0
+#12 12254.0  + cupy-cuda12x==13.6.0
+#12 12254.0  + depyf==0.19.0
+#12 12254.0  + dill==0.4.0
+#12 12254.0  + diskcache==5.6.3
+#12 12254.0  + distro==1.9.0
+#12 12254.0  + dnspython==2.8.0
+#12 12254.0  + email-validator==2.3.0
+#12 12254.0  + exceptiongroup==1.3.0
+#12 12254.0  + fastapi==0.116.1
+#12 12254.0  + fastapi-cli==0.0.10
+#12 12254.0  + fastapi-cloud-cli==0.1.5
+#12 12254.0  + fastrlock==0.8.3
+#12 12254.0  + frozendict==2.4.6
+#12 12254.0  + frozenlist==1.7.0
+#12 12254.0  + gguf==0.17.1
+#12 12254.0  + h11==0.16.0
+#12 12254.0  + hf-xet==1.1.9
+#12 12254.0  + httpcore==1.0.9
+#12 12254.0  + httptools==0.6.4
+#12 12254.0  + httpx==0.28.1
+#12 12254.0  + huggingface-hub==0.34.4
+#12 12254.0  + interegular==0.3.3
+#12 12254.0  + jiter==0.10.0
+#12 12254.0  + jsonschema==4.25.1
+#12 12254.0  + jsonschema-specifications==2025.9.1
+#12 12254.0  + lark==1.2.2
+#12 12254.0  + llguidance==0.7.30
+#12 12254.0  + llvmlite==0.44.0
+#12 12254.0  + lm-format-enforcer==0.11.3
+#12 12254.0  + markdown-it-py==4.0.0
+#12 12254.0  + mdurl==0.1.2
+#12 12254.0  + mistral-common==1.8.4
+#12 12254.0  + msgpack==1.1.1
+#12 12254.0  + msgspec==0.19.0
+#12 12254.0  + multidict==6.6.4
+#12 12254.0  + numba==0.61.2
+#12 12254.0  - nvidia-nccl-cu12==2.27.5
+#12 12254.0  + nvidia-nccl-cu12==2.27.3
+#12 12254.0  + openai==1.107.0
+#12 12254.0  + openai-harmony==0.0.4
+#12 12254.0  + opencv-python-headless==4.12.0.88
+#12 12254.0  + outlines-core==0.2.10
+#12 12254.0  + partial-json-parser==0.2.1.1.post6
+#12 12254.0  + prometheus-client==0.22.1
+#12 12254.0  + prometheus-fastapi-instrumentator==7.1.0
+#12 12254.0  + propcache==0.3.2
+#12 12254.0  + protobuf==6.32.0
+#12 12254.0  + psutil==7.0.0
+#12 12254.0  + py-cpuinfo==9.0.0
+#12 12254.0  + pybase64==1.4.2
+#12 12254.0  + pycountry==24.6.1
+#12 12254.0  + pycparser==2.22
+#12 12254.0  + pydantic==2.11.7
+#12 12254.0  + pydantic-core==2.33.2
+#12 12254.0  + pydantic-extra-types==2.10.5
+#12 12254.0  + pygments==2.19.2
+#12 12254.0  + python-dotenv==1.1.1
+#12 12254.0  + python-json-logger==3.3.0
+#12 12254.0  + python-multipart==0.0.20
+#12 12254.0  + pyyaml==6.0.2
+#12 12254.0  + pyzmq==27.1.0
+#12 12254.0  + ray==2.49.1
+#12 12254.0  + referencing==0.36.2
+#12 12254.0  + regex==2025.9.1
+#12 12254.0  + rich==14.1.0
+#12 12254.0  + rich-toolkit==0.15.1
+#12 12254.0  + rignore==0.6.4
+#12 12254.0  + rpds-py==0.27.1
+#12 12254.0  + safetensors==0.6.2
+#12 12254.0  + scipy==1.15.3
+#12 12254.0  + sentencepiece==0.2.1
+#12 12254.0  + sentry-sdk==2.37.0
+#12 12254.0  + setproctitle==1.3.7
+#12 12254.0  + setuptools==80.9.0
+#12 12254.0  + shellingham==1.5.4
+#12 12254.0  + sniffio==1.3.1
+#12 12254.0  + soundfile==0.13.1
+#12 12254.0  + soxr==1.0.0
+#12 12254.0  + starlette==0.47.3
+#12 12254.0  + tiktoken==0.11.0
+#12 12254.0  + tokenizers==0.22.0
+#12 12254.0  - torch==2.9.0.dev20250908+cu128
+#12 12254.0  + torch==2.8.0
+#12 12254.0  - torchaudio==2.8.0.dev20250908+cu128
+#12 12254.0  + torchaudio==2.8.0
+#12 12254.0  - torchvision==0.24.0.dev20250908+cu128
+#12 12254.0  + torchvision==0.23.0
+#12 12254.0  + transformers==4.56.1
+#12 12254.0  + triton==3.4.0
+#12 12254.0  + typer==0.17.4
+#12 12254.0  + typing-inspection==0.4.1
+#12 12254.0  + uvicorn==0.35.0
+#12 12254.0  + uvloop==0.21.0
+#12 12254.0  + vllm==0.1.dev1+g46876dff3 (from file:///opt/vllm)
+#12 12254.0  + watchfiles==1.1.0
+#12 12254.0  + websockets==15.0.1
+#12 12254.0  + xformers==0.0.32.post1
+#12 12254.0  + xgrammar==0.1.23
+#12 12254.0  + yarl==1.20.1
+#12 DONE 12254.6s
+
+#13 exporting to image
+#13 exporting layers
+#13 exporting layers 11.0s done
+#13 writing image sha256:fee2858f94fa36cbb8770b52ca8c571f0dbfa02f097a69fade3df68a5feba804 done
+#13 naming to docker.io/library/test:v0.1 done
+#13 DONE 11.0s
