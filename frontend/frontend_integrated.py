@@ -281,6 +281,20 @@ def send_message():
                     {
                         "type": "function",
                         "function": {
+                            "name": "time_now",
+                            "description": "Get current time in specified timezone",
+                            "parameters": {
+                                "type": "object",
+                                "properties": {
+                                    "timezone": {"type": "string", "description": "Timezone like Asia/Seoul, UTC, etc."}
+                                },
+                                "required": []
+                            }
+                        }
+                    },
+                    {
+                        "type": "function",
+                        "function": {
                             "name": "calculator",
                             "description": "Perform mathematical calculations",
                             "parameters": {

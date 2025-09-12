@@ -52,6 +52,7 @@ app.add_middleware(
 
 vllm_client: Optional[VLLMClient] = None
 tool_registry: Optional[ToolRegistry] = None
+mcp_tools = None  # Compatibility alias
 langchain_agent: Optional[Any] = None
 
 
@@ -100,7 +101,7 @@ def initialize_tools() -> ToolRegistry:
 
 @app.on_event("startup")
 async def startup() -> None:
-    global vllm_client, tool_registry, langchain_agent
+    global vllm_client, tool_registry, mcp_tools, langchain_agent
     config = get_vllm_config()
     vllm_client = VLLMClient(
         config["base_url"],
@@ -112,6 +113,7 @@ async def startup() -> None:
     
     # Initialize tool registry
     tool_registry = initialize_tools()
+    mcp_tools = tool_registry  # Compatibility alias
     
     # Initialize LangChain agent backed by vLLM's OpenAI-compatible API
     if _LANGCHAIN_AVAILABLE:
@@ -202,7 +204,7 @@ SYSTEM_PROMPT = "한국어로 간결하게 답해."
 
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest) -> ChatResponse:
-    if not vllm_client or not mcp_tools:
+    if not vllm_client or not tool_registry:
         raise HTTPException(status_code=500, detail="Server not initialized")
 
     messages: List[Dict[str, str]] = [
@@ -237,7 +239,10 @@ async def chat(request: ChatRequest) -> ChatResponse:
                     
                     # Use enhanced tool execution
                     try:
-                        result = await mcp_tools.execute_tool(name, **params)
+                        if hasattr(tool_registry, 'execute_tool'):
+                            result = await tool_registry.execute_tool(name, **params)
+                        else:
+                            result = f"Tool {name} execution not available"
                         
                         # 결과를 문자열로 변환
                         if not isinstance(result, str):
