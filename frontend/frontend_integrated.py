@@ -370,8 +370,12 @@ def send_message():
             </div>
             """, unsafe_allow_html=True)
     
-    # 입력 필드 초기화
-    st.session_state["user_input"] = ""
+    # 입력 필드 초기화 (안전한 방식으로)
+    try:
+        if "user_input" in st.session_state:
+            del st.session_state["user_input"]
+    except:
+        pass
     st.rerun()
 
 # 입력 폼

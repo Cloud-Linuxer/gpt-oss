@@ -206,7 +206,21 @@ JSON만 출력하세요."""
                 response = await client.post(VLLM_URL, json=routing_request)
                 if response.status_code == 200:
                     result = response.json()
-                    content = result["choices"][0]["message"]["content"].strip()
+                    
+                    # Robust content extraction with null checks
+                    choices = result.get("choices", [])
+                    if not choices:
+                        logger.warning("No choices in vLLM response, using pattern detection")
+                        return self._fallback_pattern_detection(user_message, request.tools)
+                    
+                    message = choices[0].get("message", {})
+                    content = message.get("content")
+                    
+                    if content is None or not content.strip():
+                        logger.warning("Empty/null content from vLLM, using pattern detection")
+                        return self._fallback_pattern_detection(user_message, request.tools)
+                    
+                    content = content.strip()
                     
                     try:
                         decision = json.loads(content)
@@ -215,8 +229,11 @@ JSON만 출력하세요."""
                         else:
                             return False, "", {}
                     except json.JSONDecodeError:
-                        # Fallback to pattern matching
+                        logger.warning("Invalid JSON from vLLM, using pattern detection")
                         return self._fallback_pattern_detection(user_message, request.tools)
+                else:
+                    logger.error(f"vLLM returned status {response.status_code}, using pattern detection")
+                    return self._fallback_pattern_detection(user_message, request.tools)
             except Exception as e:
                 logger.error(f"Tool routing failed: {e}")
                 # Try pattern detection as fallback
@@ -225,41 +242,54 @@ JSON만 출력하세요."""
         return False, "", {}
     
     def _fallback_pattern_detection(self, user_message: str, tools: List[Dict]) -> Tuple[bool, str, Dict]:
-        """Fallback pattern detection when JSON parsing fails."""
+        """Enhanced fallback pattern detection with robust matching."""
         
         text = user_message.lower()
         available_tools = [tool["function"]["name"] for tool in tools]
         
-        # Calculator patterns
-        calc_patterns = [
-            r'(\d+)\s*[×*곱하기]\s*(\d+)',
-            r'(\d+)\s*\+\s*(\d+)',
-            r'(\d+)\s*-\s*(\d+)',
-            r'(\d+)\s*/\s*(\d+)'
-        ]
+        logger.info(f"Pattern detection for: '{user_message}' with tools: {available_tools}")
         
+        # Time patterns (prioritized for better detection)
+        if "time_now" in available_tools:
+            time_keywords = ['시간', '몇시', '지금', 'time', 'now', 'clock', '시각', '현재', '언제', 'when']
+            if any(word in text for word in time_keywords):
+                logger.info("Time pattern detected")
+                return True, "time_now", {"timezone": "서울", "format": "standard"}
+        
+        # Calculator patterns with better regex
         if "calculator" in available_tools:
-            for pattern in calc_patterns:
+            calc_patterns = [
+                (r'(\d+(?:\.\d+)?)\s*[×*곱하기]\s*(\d+(?:\.\d+)?)', '*'),
+                (r'(\d+(?:\.\d+)?)\s*\+\s*(\d+(?:\.\d+)?)', '+'),  
+                (r'(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)', '-'),
+                (r'(\d+(?:\.\d+)?)\s*/\s*(\d+(?:\.\d+)?)', '/'),
+                (r'(\d+(?:\.\d+)?)\s*더하기\s*(\d+(?:\.\d+)?)', '+'),
+                (r'(\d+(?:\.\d+)?)\s*빼기\s*(\d+(?:\.\d+)?)', '-'),
+                (r'(\d+(?:\.\d+)?)\s*나누기\s*(\d+(?:\.\d+)?)', '/'),
+            ]
+            
+            for pattern, op in calc_patterns:
                 match = re.search(pattern, text)
                 if match:
-                    if '곱하기' in text or '×' in text or '*' in text:
-                        expr = f"{match.group(1)} * {match.group(2)}"
-                    elif '+' in text:
-                        expr = f"{match.group(1)} + {match.group(2)}"
-                    elif '-' in text:
-                        expr = f"{match.group(1)} - {match.group(2)}"
-                    elif '/' in text:
-                        expr = f"{match.group(1)} / {match.group(2)}"
-                    else:
-                        expr = f"{match.group(1)} * {match.group(2)}"
-                    
+                    expr = f"{match.group(1)} {op} {match.group(2)}"
+                    logger.info(f"Calculator pattern detected: {expr}")
                     return True, "calculator", {"expression": expr}
         
         # System info patterns
         if "system_info" in available_tools:
-            if any(word in text for word in ['시스템', 'cpu', '메모리', 'memory']):
+            sys_keywords = ['시스템', 'system', 'cpu', '메모리', 'memory', 'ram', '디스크', 'disk', '상태', 'status']
+            if any(word in text for word in sys_keywords):
+                logger.info("System info pattern detected")
                 return True, "system_info", {"info_type": "all"}
         
+        # File operations patterns
+        if "file_list" in available_tools:
+            file_keywords = ['파일', 'file', '목록', 'list', '디렉토리', 'directory', 'folder', 'ls']
+            if any(word in text for word in file_keywords):
+                logger.info("File list pattern detected")
+                return True, "file_list", {"directory": ".", "recursive": False}
+        
+        logger.info("No patterns matched, using normal response")
         return False, "", {}
     
     async def _execute_local_tool(self, tool_name: str, parameters: Dict) -> Dict:
@@ -355,13 +385,45 @@ JSON만 출력하세요."""
         async with httpx.AsyncClient(timeout=30.0) as client:
             try:
                 response = await client.post(VLLM_URL, json=vllm_request)
-                return response.json()
-            except Exception as e:
+                
+                if response.status_code == 200:
+                    try:
+                        return response.json()
+                    except json.JSONDecodeError:
+                        logger.error("Invalid JSON response from vLLM")
+                        return {
+                            "error": {
+                                "message": "Invalid JSON response from vLLM server",
+                                "type": "BadRequestError", 
+                                "code": 400
+                            }
+                        }
+                else:
+                    logger.error(f"vLLM HTTP error: {response.status_code}")
+                    return {
+                        "error": {
+                            "message": f"vLLM server error: HTTP {response.status_code}",
+                            "type": "BadRequestError",
+                            "code": 400
+                        }
+                    }
+                    
+            except httpx.TimeoutException:
+                logger.error("vLLM request timeout")
                 return {
                     "error": {
-                        "message": f"Passthrough failed: {e}",
-                        "type": "BadRequestError",
-                        "code": 400
+                        "message": "Request timeout to vLLM server",
+                        "type": "TimeoutError",
+                        "code": 408
+                    }
+                }
+            except Exception as e:
+                logger.error(f"vLLM connection error: {e}")
+                return {
+                    "error": {
+                        "message": f"Connection failed to vLLM server: {e}",
+                        "type": "ConnectionError",
+                        "code": 503
                     }
                 }
 

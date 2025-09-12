@@ -10,7 +10,8 @@ services:
     ports:
       - "8001:8001"
     environment:
-      - VLLM_API_URL=http://host.docker.internal:8000
+      - VLLM_API_URL=http://localhost:8000
+      - VLLM_URL=http://localhost:8000/v1/chat/completions
       - VLLM_MODEL=openai/gpt-oss-20b
     restart: unless-stopped
     healthcheck:
@@ -19,8 +20,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    networks:
-      - gpt-oss-network
+    network_mode: "host"
 
   # Frontend Streamlit App
   frontend:
@@ -29,8 +29,8 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - PROXY_URL=http://proxy:8001/v1/chat/completions
-      - PROXY_BASE=http://proxy:8001
+      - PROXY_URL=http://localhost:8001/v1/chat/completions
+      - PROXY_BASE=http://localhost:8001
     depends_on:
       proxy:
         condition: service_healthy
@@ -41,13 +41,13 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    networks:
-      - gpt-oss-network
+    network_mode: "host"
 
-networks:
-  gpt-oss-network:
-    driver: bridge
-    name: gpt-oss-network
+# Networks not needed with host mode
+# networks:
+#   gpt-oss-network:
+#     driver: bridge
+#     name: gpt-oss-network
 
 # Usage Instructions:
 # 1. Start the stack:
