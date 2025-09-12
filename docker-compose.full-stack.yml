@@ -1,0 +1,73 @@
+version: '3.8'
+
+name: gpt-oss-full-stack
+
+services:
+  # Tool Calling Proxy Backend
+  proxy:
+    image: gpt-oss-tool-proxy:latest
+    container_name: gpt-oss-tool-proxy
+    ports:
+      - "8001:8001"
+    environment:
+      - VLLM_API_URL=http://host.docker.internal:8000
+      - VLLM_MODEL=openai/gpt-oss-20b
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - gpt-oss-network
+
+  # Frontend Streamlit App
+  frontend:
+    image: gpt-oss-frontend:latest
+    container_name: gpt-oss-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - PROXY_URL=http://proxy:8001/v1/chat/completions
+      - PROXY_BASE=http://proxy:8001
+    depends_on:
+      proxy:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - gpt-oss-network
+
+networks:
+  gpt-oss-network:
+    driver: bridge
+    name: gpt-oss-network
+
+# Usage Instructions:
+# 1. Start the stack:
+#    docker-compose -f docker-compose.full-stack.yml up -d
+#
+# 2. Access services:
+#    - Frontend UI: http://localhost:8501
+#    - Proxy API: http://localhost:8001/v1/chat/completions
+#    - Proxy Health: http://localhost:8001/health
+#    - Tools List: http://localhost:8001/tools
+#
+# 3. Stop the stack:
+#    docker-compose -f docker-compose.full-stack.yml down
+#
+# 4. View logs:
+#    docker-compose -f docker-compose.full-stack.yml logs -f
+#
+# Prerequisites:
+# - vLLM server running on host port 8000 with gpt-oss-20b model
+# - Built images: gpt-oss-tool-proxy:latest and gpt-oss-frontend:latest
+#
+# Architecture:
+# Frontend (Streamlit) → Proxy (FastAPI) → vLLM (Host) → gpt-oss-20b

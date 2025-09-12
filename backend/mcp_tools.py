@@ -1,4 +1,4 @@
-"""Tool implementations for HTTP requests and time queries."""
+"""Enhanced tool implementations with extensible registry system."""
 
 from __future__ import annotations
 
@@ -8,15 +8,44 @@ from typing import Any, Dict, List, Optional
 
 from zoneinfo import ZoneInfo
 import httpx
+from tools import (
+    ToolRegistry, 
+    FileReadTool, FileWriteTool, FileListTool,
+    SystemInfoTool, ProcessListTool, EnvironmentTool,
+    CalculatorTool, StatisticsTool,
+    JSONParseTool, JSONQueryTool, DataTransformTool
+)
 
 logger = logging.getLogger(__name__)
 
 
 class MCPTools:
-    """Minimal tools usable by the model."""
+    """Enhanced tools with extensible registry system."""
 
     def __init__(self) -> None:
         self.http_client = httpx.AsyncClient(timeout=30.0)
+        self.tool_registry = get_registry()
+        
+        # Register all built-in tools
+        self._register_builtin_tools()
+        
+        # Legacy method mapping for backward compatibility
+        self._legacy_methods = {
+            'http_request': self.http_request,
+            'time_now': self.time_now
+        }
+
+    def _register_builtin_tools(self) -> None:
+        """Register all built-in tool categories."""
+        try:
+            self.tool_registry.register_tool(FileOperationsTool())
+            self.tool_registry.register_tool(MathematicalTool())
+            self.tool_registry.register_tool(SystemInfoTool())
+            self.tool_registry.register_tool(DataProcessingTool())
+            self.tool_registry.register_tool(ValidationTool())
+            logger.info("Registered all built-in tools successfully")
+        except Exception as e:
+            logger.error(f"Failed to register built-in tools: {e}")
 
     async def close(self) -> None:
         await self.http_client.aclose()
@@ -55,9 +84,13 @@ class MCPTools:
             logger.error("time_now error: %s", e)
             return f"time_now failed: {e}"
 
-    def get_schemas(self) -> List[Dict[str, Any]]:
+    def get_schemas(self, max_safety_level: str = "restricted") -> List[Dict[str, Any]]:
         """Return JSON schemas for available tools."""
-        return [
+        # Get schemas from registry
+        registry_schemas = self.tool_registry.get_openai_schemas(max_safety_level=max_safety_level)
+        
+        # Add legacy tool schemas for backward compatibility
+        legacy_schemas = [
             {
                 "type": "function",
                 "function": {
@@ -108,4 +141,33 @@ class MCPTools:
                 },
             },
         ]
+        
+        return legacy_schemas + registry_schemas
+
+    async def execute_tool(self, name: str, **kwargs) -> str:
+        """Execute a tool by name with parameters."""
+        # Check legacy methods first for backward compatibility
+        if name in self._legacy_methods:
+            try:
+                result = await self._legacy_methods[name](**kwargs)
+                return str(result)
+            except Exception as e:
+                logger.error(f"Legacy tool execution error for {name}: {e}")
+                return f"Tool execution failed: {e}"
+        
+        # Use registry for new tools
+        tool_result = await self.tool_registry.execute_tool(name, **kwargs)
+        return str(tool_result)
+
+    def get_tool_info(self) -> Dict[str, Any]:
+        """Get information about all available tools."""
+        registry_stats = self.tool_registry.get_stats()
+        legacy_tools = list(self._legacy_methods.keys())
+        
+        return {
+            "legacy_tools": legacy_tools,
+            "registry_tools": registry_stats,
+            "total_tools": len(legacy_tools) + registry_stats["total_tools"],
+            "categories": registry_stats["categories"]
+        }
 

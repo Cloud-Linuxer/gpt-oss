@@ -1,0 +1,4 @@
+{
+  "message": "Please use the calculator tool to compute 25 * 4 + 10. Use function_call: calculator(expression=25*4+10) format.",
+  "history": []
+}

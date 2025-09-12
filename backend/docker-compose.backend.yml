@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: gpt-oss-backend
+    ports:
+      - "8001:8001"
+    environment:
+      - VLLM_BASE_URL=http://vllm:8000
+      - VLLM_MODEL=openai/gpt-oss-20b
+      - PORT=8001
+      - HOST=0.0.0.0
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs:/app/logs
+      - /tmp:/tmp  # For file operations
+    restart: unless-stopped
+    networks:
+      - gpt-oss-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: gpt-oss-vllm
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL=/models/gpt-oss-20b
+      - GPU_MEMORY_UTILIZATION=0.95
+      - MAX_MODEL_LEN=8192
+    volumes:
+      - /home/gpt-oss/models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    networks:
+      - gpt-oss-network
+
+networks:
+  gpt-oss-network:
+    driver: bridge

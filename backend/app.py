@@ -11,8 +11,18 @@ from pydantic import BaseModel, Field
 
 from config import get_vllm_config, get_settings
 from vllm_client import VLLMClient
-from mcp_tools import MCPTools
 from version import __version__
+
+# Import new tool system
+from tools import (
+    ToolRegistry,
+    FileReadTool, FileWriteTool, FileListTool,
+    SystemInfoTool, ProcessListTool, EnvironmentTool,
+    CalculatorTool, StatisticsTool,
+    JSONParseTool, JSONQueryTool, DataTransformTool,
+    APIRequestTool, WebScrapeTool,
+    DatabaseQueryTool, DatabaseExecuteTool
+)
 
 try:
     # LangChain integration (optional at import time)
@@ -41,7 +51,7 @@ app.add_middleware(
 )
 
 vllm_client: Optional[VLLMClient] = None
-mcp_tools: Optional[MCPTools] = None
+tool_registry: Optional[ToolRegistry] = None
 langchain_agent: Optional[Any] = None
 
 
@@ -53,9 +63,44 @@ class ChatResponse(BaseModel):
     response: str = Field(..., description="AI 응답")
 
 
+def initialize_tools() -> ToolRegistry:
+    """Initialize all tools and return registry."""
+    registry = ToolRegistry()
+    
+    # File tools
+    registry.register(FileReadTool(), category="file")
+    registry.register(FileWriteTool(), category="file")
+    registry.register(FileListTool(), category="file")
+    
+    # System tools
+    registry.register(SystemInfoTool(), category="system")
+    registry.register(ProcessListTool(), category="system")
+    registry.register(EnvironmentTool(), category="system")
+    
+    # Math tools
+    registry.register(CalculatorTool(), category="math")
+    registry.register(StatisticsTool(), category="math")
+    
+    # Data tools
+    registry.register(JSONParseTool(), category="data")
+    registry.register(JSONQueryTool(), category="data")
+    registry.register(DataTransformTool(), category="data")
+    
+    # Web tools
+    registry.register(APIRequestTool(), category="web")
+    registry.register(WebScrapeTool(), category="web")
+    
+    # Database tools
+    registry.register(DatabaseQueryTool(), category="database")
+    registry.register(DatabaseExecuteTool(), category="database")
+    
+    logger.info(f"Initialized {len(registry.list_tools())} tools in {len(registry._categories)} categories")
+    return registry
+
+
 @app.on_event("startup")
 async def startup() -> None:
-    global vllm_client, mcp_tools, langchain_agent
+    global vllm_client, tool_registry, langchain_agent
     config = get_vllm_config()
     vllm_client = VLLMClient(
         config["base_url"],
@@ -64,7 +109,10 @@ async def startup() -> None:
         temperature=config.get("temperature", 0.7),
         timeout=config.get("timeout", 60),
     )
-    mcp_tools = MCPTools()
+    
+    # Initialize tool registry
+    tool_registry = initialize_tools()
+    
     # Initialize LangChain agent backed by vLLM's OpenAI-compatible API
     if _LANGCHAIN_AVAILABLE:
         # vLLM exposes OpenAI-compatible API, so set base_url and dummy key
@@ -78,6 +126,10 @@ async def startup() -> None:
         )
 
         # Wrap MCPTools methods as LangChain tools
+        # Create LangChain tools from all available tools
+        tools = []
+        
+        # Add legacy tools
         @tool("http_request")
         async def lc_http_request(
             method: str,
@@ -88,9 +140,10 @@ async def startup() -> None:
             timeout_s: int = 5,
         ) -> str:
             """Make HTTP requests to internal/external APIs."""
-            return await mcp_tools.http_request(
-                method,
-                url,
+            return await mcp_tools.execute_tool(
+                "http_request",
+                method=method,
+                url=url,
                 headers=headers,
                 query=query,
                 json=json_body,
@@ -100,9 +153,27 @@ async def startup() -> None:
         @tool("time_now")
         async def lc_time_now(timezone: str = "UTC") -> str:
             """Get current time in specified timezone."""
-            return await mcp_tools.time_now(timezone=timezone)
+            return await mcp_tools.execute_tool("time_now", timezone=timezone)
 
         tools = [lc_http_request, lc_time_now]
+        
+        # Add new registry tools
+        registry_schemas = mcp_tools.tool_registry.get_openai_schemas(max_safety_level="safe")
+        for schema in registry_schemas:
+            func_info = schema["function"]
+            tool_name = func_info["name"]
+            tool_description = func_info["description"]
+            
+            # Create a dynamic LangChain tool
+            async def make_registry_tool(name: str, desc: str):
+                @tool(name)
+                async def registry_tool(**kwargs) -> str:
+                    return await mcp_tools.execute_tool(name, **kwargs)
+                registry_tool.__doc__ = desc
+                return registry_tool
+            
+            registry_tool = await make_registry_tool(tool_name, tool_description)
+            tools.append(registry_tool)
 
         prompt = ChatPromptTemplate.from_messages([
             ("system", "간결한 한국어로 답하고 필요 시 도구를 사용하라.\n\n사용 가능한 도구: {tool_names}\n\n{tools}"),
@@ -123,8 +194,6 @@ async def startup() -> None:
 async def shutdown() -> None:
     if vllm_client:
         await vllm_client.close()
-    if mcp_tools:
-        await mcp_tools.close()
     # LangChain agent has no explicit close
 
 
@@ -166,23 +235,17 @@ async def chat(request: ChatRequest) -> ChatResponse:
                         })
                         continue
                     
-                    func = getattr(mcp_tools, name, None)
-                    if not func:
-                        result = f"Unknown tool: {name}"
-                    else:
-                        try:
-                            if asyncio.iscoroutinefunction(func):
-                                result = await func(**params)
-                            else:
-                                result = func(**params)
+                    # Use enhanced tool execution
+                    try:
+                        result = await mcp_tools.execute_tool(name, **params)
+                        
+                        # 결과를 문자열로 변환
+                        if not isinstance(result, str):
+                            result = str(result)
                             
-                            # 결과를 문자열로 변환
-                            if not isinstance(result, str):
-                                result = str(result)
-                                
-                        except Exception as e:
-                            logger.error(f"Tool execution error for {name}: {e}")
-                            result = f"Tool execution failed: {e}"
+                    except Exception as e:
+                        logger.error(f"Tool execution error for {name}: {e}")
+                        result = f"Tool execution failed: {e}"
                     
                     messages.append({
                         "role": "tool",
@@ -231,26 +294,68 @@ async def agent_chat(request: ChatRequest) -> ChatResponse:
 
 
 @app.get("/api/tools")
-async def get_tools() -> dict:
+async def get_tools(
+    category: Optional[str] = None,
+    safety_level: Optional[str] = None,
+    detailed: bool = False
+) -> dict:
     """등록된 도구 목록 반환"""
     if not mcp_tools:
         raise HTTPException(status_code=500, detail="Server not initialized")
     
-    schemas = mcp_tools.get_schemas()
-    tools_info = []
+    # Get tool information
+    tool_info = mcp_tools.get_tool_info()
     
-    for schema in schemas:
-        func_info = schema["function"]
-        tools_info.append({
-            "name": func_info["name"],
-            "description": func_info["description"],
-            "parameters": func_info.get("parameters", {})
-        })
-    
-    return {
-        "tools": tools_info,
-        "count": len(tools_info)
-    }
+    if detailed:
+        # Get detailed information including schemas
+        registry_tools = mcp_tools.tool_registry.list_tools(
+            category=category,
+            safety_level=safety_level,
+            include_schemas=True
+        )
+        
+        # Get legacy tools
+        legacy_schemas = [
+            {
+                "name": "http_request",
+                "description": "사내/외부 HTTP API 호출",
+                "category": "network",
+                "safety_level": "safe",
+                "requires_confirmation": False
+            },
+            {
+                "name": "time_now", 
+                "description": "지정된 시간대의 현재 시각을 ISO 형식으로 반환",
+                "category": "utility",
+                "safety_level": "safe",
+                "requires_confirmation": False
+            }
+        ]
+        
+        return {
+            "tool_info": tool_info,
+            "legacy_tools": legacy_schemas,
+            "registry_tools": registry_tools,
+            "total_count": len(legacy_schemas) + len(registry_tools)
+        }
+    else:
+        # Simple list for backward compatibility
+        schemas = mcp_tools.get_schemas()
+        tools_info = []
+        
+        for schema in schemas:
+            func_info = schema["function"]
+            tools_info.append({
+                "name": func_info["name"],
+                "description": func_info["description"],
+                "parameters": func_info.get("parameters", {})
+            })
+        
+        return {
+            "tools": tools_info,
+            "count": len(tools_info),
+            "tool_info": tool_info
+        }
 
 
 @app.get("/health")

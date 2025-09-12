@@ -1,0 +1,122 @@
+# RTX 5090 (Blackwell, sm_120) Support with PyTorch 2.9.0 + CUDA 12.8
+# Based on successful reports from vLLM forums
+
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# Environment variables for RTX 5090
+ENV CUDA_HOME=/usr/local/cuda-12.8
+ENV PATH=${CUDA_HOME}/bin:${PATH}
+ENV LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}
+ENV TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0;10.0;12.0+PTX"
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+ENV PYTORCH_NO_CUDA_MEMORY_CACHING=0
+
+# Disable FlashAttention initially for stability
+ENV VLLM_ATTENTION_BACKEND=CUTLASS
+ENV VLLM_USE_FLASH_ATTN=0
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3.10 \
+    python3.10-dev \
+    python3-pip \
+    git \
+    wget \
+    curl \
+    vim \
+    build-essential \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Python 3.10 as default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+
+# Upgrade pip
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Install PyTorch 2.9.0 with CUDA 12.8 support (nightly build)
+RUN pip install --no-cache-dir \
+    torch==2.9.0.dev20250714+cu128 \
+    torchvision \
+    torchaudio \
+    --index-url https://download.pytorch.org/whl/nightly/cu128
+
+# Install Triton (compatible version)
+RUN pip install --no-cache-dir triton>=3.0.0
+
+# Install vLLM without torch dependency
+RUN pip install --no-cache-dir --no-deps vllm==0.10.1.1
+
+# Install vLLM dependencies (except torch)
+RUN pip install --no-cache-dir \
+    transformers \
+    accelerate \
+    sentencepiece \
+    protobuf \
+    fastapi \
+    uvicorn \
+    pydantic \
+    ray \
+    regex \
+    cachetools \
+    psutil \
+    requests \
+    tqdm \
+    blake3 \
+    py-cpuinfo \
+    tokenizers \
+    aiohttp \
+    openai \
+    prometheus_client \
+    prometheus-fastapi-instrumentator \
+    tiktoken \
+    lm-format-enforcer \
+    llguidance \
+    outlines_core \
+    diskcache \
+    lark \
+    xgrammar \
+    partial-json-parser \
+    pyzmq \
+    msgspec \
+    gguf \
+    mistral_common \
+    opencv-python-headless \
+    pyyaml \
+    einops \
+    compressed-tensors \
+    depyf \
+    cloudpickle \
+    watchfiles \
+    python-json-logger \
+    scipy \
+    ninja \
+    pybase64 \
+    cbor2 \
+    setproctitle \
+    openai-harmony \
+    numba \
+    xformers
+
+# Skip CUDA verification during build
+# It will be checked at runtime
+
+# Create workspace
+WORKDIR /workspace
+
+# Expose vLLM API port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD python -c "import torch; assert torch.cuda.is_available()" || exit 1
+
+# Default command
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--dtype", "auto", \
+     "--gpu-memory-utilization", "0.95"]
