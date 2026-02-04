@@ -1,0 +1,56 @@
+# RTX 5090 안정 버전 Dockerfile
+# PyTorch 2.10 nightly + vLLM 0.11.0 wheel (소스 빌드 아님)
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# 시스템 패키지
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    git curl wget \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python 3.11 기본 설정
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# pip 업그레이드
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# PyTorch 2.10 nightly (RTX 5090 지원)
+RUN pip install --pre torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/nightly/cu128
+
+# RTX 5090 환경 변수
+ENV TORCH_CUDA_ARCH_LIST="12.0"
+ENV CUDA_HOME=/usr/local/cuda
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
+# vLLM 0.11.0 안정 버전 설치 (wheel 사용)
+RUN pip install vllm==0.11.0
+
+# HuggingFace 설정
+ENV HF_HOME=/models
+ENV TRANSFORMERS_CACHE=/models
+ENV HF_HUB_OFFLINE=0
+
+RUN mkdir -p /models /app
+WORKDIR /app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "openai/gpt-oss-20b", \
+     "--dtype", "auto", \
+     "--gpu-memory-utilization", "0.90", \
+     "--max-model-len", "8192", \
+     "--tensor-parallel-size", "1", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--enforce-eager", \
+     "--disable-custom-all-reduce"]

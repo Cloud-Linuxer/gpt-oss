@@ -1,0 +1,104 @@
+# vLLM 0.15.0 optimized Dockerfile for GPT-OSS-20B on RTX 5090
+# Using PyTorch 2.9.0 + CUDA 12.9 for Blackwell support
+FROM nvidia/cuda:12.9.0-devel-ubuntu22.04
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    git \
+    curl \
+    wget \
+    build-essential \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Python 3.11 as default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# Upgrade pip
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Install PyTorch 2.9.0 with CUDA 12.9 support for RTX 5090
+RUN pip install torch==2.9.0 torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/cu129
+
+# Set environment variables for RTX 5090 (sm_120)
+ENV TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6;8.9;9.0;12.0+PTX"
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+ENV CUDA_LAUNCH_BLOCKING=0
+
+# Install dependencies for vLLM build
+RUN pip install packaging \
+    numpy \
+    transformers \
+    sentencepiece \
+    protobuf \
+    fastapi \
+    uvicorn \
+    pydantic \
+    prometheus-client \
+    py-cpuinfo \
+    psutil \
+    ray \
+    accelerate \
+    setuptools-scm \
+    wheel \
+    cmake
+
+# Clone and build vLLM 0.15.0 from source with sm_120 support
+RUN git clone https://github.com/vllm-project/vllm.git /vllm && \
+    cd /vllm && \
+    git checkout v0.15.0 && \
+    pip install ninja packaging && \
+    TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6;8.9;9.0;12.0+PTX" \
+    MAX_JOBS=2 \
+    pip install -v .
+
+# Install FlashAttention with Blackwell support (if available)
+# Fallback to Triton attention if FA fails
+RUN pip install flash-attn --no-build-isolation || echo "FlashAttention build failed, will use Triton"
+
+# RTX 5090 specific vLLM settings
+ENV VLLM_USE_TRITON_FLASH_ATTN=1
+ENV VLLM_WORKER_MULTIPROC_METHOD=spawn
+ENV VLLM_ATTENTION_BACKEND=TRITON
+ENV PYTORCH_NO_CUDA_MEMORY_CACHING=0
+
+# Disable CUDA graphs for initial stability
+ENV CUDA_GRAPH_DISABLE=1
+ENV VLLM_DISABLE_CUSTOM_ALL_REDUCE=1
+
+# HuggingFace settings
+ENV HF_HOME=/models
+ENV TRANSFORMERS_CACHE=/models
+ENV HF_HUB_OFFLINE=0
+
+# Create necessary directories
+RUN mkdir -p /models /app
+
+# Working directory
+WORKDIR /app
+
+# Expose API port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Default command with safe settings for RTX 5090 with GPT-OSS-20B
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "openai/gpt-oss-20b", \
+     "--dtype", "auto", \
+     "--gpu-memory-utilization", "0.90", \
+     "--max-model-len", "8192", \
+     "--tensor-parallel-size", "1", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--enforce-eager", \
+     "--disable-custom-all-reduce"]

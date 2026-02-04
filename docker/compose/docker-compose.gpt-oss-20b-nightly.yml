@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  vllm:
+    image: vllm/vllm-openai:nightly
+    container_name: gpt-oss-20b-vllm-nightly
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "8000:8000"
+    volumes:
+      - /home/gpt-oss/models:/root/.cache/huggingface
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - HF_HOME=/root/.cache/huggingface
+      - TRANSFORMERS_CACHE=/root/.cache/huggingface
+    command: >
+      --model openai/gpt-oss-20b
+      --dtype auto
+      --gpu-memory-utilization 0.90
+      --max-model-len 8192
+      --tensor-parallel-size 1
+      --host 0.0.0.0
+      --port 8000
+      --trust-remote-code
+      --enforce-eager
+      --disable-custom-all-reduce
+    shm_size: '16gb'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 300s

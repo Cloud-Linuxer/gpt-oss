@@ -1,0 +1,105 @@
+# RTX 5090 (SM_120) with FlashInfer Support
+# FlashInfer는 추론 특화 어텐션 구현
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# 시스템 패키지
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    git curl wget \
+    build-essential \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python 3.11 기본 설정
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# pip 업그레이드
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# PyTorch 2.10 nightly cu128 (SM_120 커널 포함)
+RUN pip install --pre torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/nightly/cu128
+
+# RTX 5090 빌드 환경 변수
+ENV TORCH_CUDA_ARCH_LIST="12.0"
+ENV CUDA_HOME=/usr/local/cuda
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+ENV MAX_JOBS=16
+
+# FlashInfer 설치 - 여러 방법 시도
+# 방법 1: 공식 인덱스에서 시도
+RUN pip install flashinfer -i https://flashinfer.ai/whl/cu128/torch2.10/ || \
+    # 방법 2: 소스에서 빌드
+    (git clone https://github.com/flashinfer-ai/flashinfer.git /flashinfer && \
+     cd /flashinfer && \
+     git submodule update --init --recursive && \
+     mkdir build && cd build && \
+     cmake .. -DFLASHINFER_CUDA_ARCHITECTURES="90;120" -DCMAKE_CUDA_ARCHITECTURES="90;120" && \
+     make -j16 && \
+     cd ../python && \
+     pip install -e .) || \
+    echo "FlashInfer build failed, continuing with fallback"
+
+# vLLM 소스 다운로드
+RUN git clone https://github.com/vllm-project/vllm.git /vllm && \
+    cd /vllm && \
+    git checkout v0.11.0
+
+WORKDIR /vllm
+
+# 빌드 의존성 설치
+RUN pip install packaging ninja wheel cmake \
+    numpy transformers tokenizers \
+    sentencepiece protobuf \
+    fastapi uvicorn pydantic \
+    prometheus-client py-cpuinfo psutil \
+    accelerate setuptools-scm
+
+# vLLM 소스 빌드 (FlashInfer 지원)
+RUN TORCH_CUDA_ARCH_LIST="12.0" MAX_JOBS=16 \
+    pip install --no-build-isolation -v -e .
+
+# HuggingFace 설정
+ENV HF_HOME=/models
+ENV TRANSFORMERS_CACHE=/models
+ENV HF_HUB_OFFLINE=0
+
+# 어텐션 백엔드 설정 - FlashInfer 우선
+ENV VLLM_ATTENTION_BACKEND=FLASHINFER
+ENV VLLM_WORKER_MULTIPROC_METHOD=spawn
+ENV VLLM_TORCH_COMPILE=0
+ENV CUDA_LAUNCH_BLOCKING=0
+
+RUN mkdir -p /models /app
+WORKDIR /app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# 환경 테스트 스크립트
+RUN echo '#!/bin/bash\n\
+echo "=== RTX 5090 FlashInfer Configuration ==="\n\
+python -c "import torch; print(f\"PyTorch: {torch.__version__}\")" \n\
+python -c "import torch; print(f\"CUDA: {torch.version.cuda}\")" \n\
+python -c "import torch; print(f\"CC: {torch.cuda.get_device_capability(0)}\")" \n\
+python -c "import flashinfer; print(\"FlashInfer: installed\")" 2>/dev/null || echo "FlashInfer: not available" \n\
+python -c "from vllm.attention.backends.flashinfer import FlashInferBackend; print(\"FlashInfer backend: available\")" 2>/dev/null || echo "FlashInfer backend: not integrated" \n\
+echo "=================================="\n' > /test_env.sh && chmod +x /test_env.sh
+
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "openai/gpt-oss-20b", \
+     "--dtype", "bfloat16", \
+     "--gpu-memory-utilization", "0.90", \
+     "--max-model-len", "8192", \
+     "--tensor-parallel-size", "1", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--enforce-eager", \
+     "--disable-custom-all-reduce"]

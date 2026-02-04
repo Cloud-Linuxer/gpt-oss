@@ -1,0 +1,94 @@
+# RTX 5090 (SM_120) - vLLM 0.11.0 + FlashInfer SM_120 재컴파일
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# 시스템 패키지
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    git curl wget \
+    build-essential \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python 3.11 기본 설정
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# pip 업그레이드
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# 1. FlashAttention 외부 패키지 명시적 제거
+RUN pip uninstall -y flash-attn flash_attn xformers || true
+
+# 2. PyTorch 2.8.0 cu128
+RUN pip install torch==2.8.0 torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/cu128
+
+# 3. RTX 5090 빌드 환경 변수 (CRITICAL: FlashInfer도 SM_120로 컴파일)
+ENV TORCH_CUDA_ARCH_LIST="12.0"
+ENV FLASHINFER_CUDA_ARCH_LIST="12.0"
+ENV CUDA_HOME=/usr/local/cuda
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+ENV MAX_JOBS=8
+
+# 4. vLLM 소스 다운로드
+RUN git clone https://github.com/vllm-project/vllm.git /vllm && \
+    cd /vllm && \
+    git checkout v0.11.0
+
+WORKDIR /vllm
+
+# 5. 빌드 의존성 설치
+RUN pip install packaging ninja wheel cmake \
+    numpy transformers tokenizers \
+    sentencepiece protobuf \
+    fastapi uvicorn pydantic \
+    prometheus-client py-cpuinfo psutil \
+    accelerate setuptools-scm
+
+# 6. vLLM 소스 빌드
+RUN TORCH_CUDA_ARCH_LIST="12.0" MAX_JOBS=8 \
+    pip install --no-build-isolation -v -e .
+
+# 6.5. FlashInfer 소스 빌드 (CRITICAL: SM_120 지원 + BUILD ISOLATION REQUIRED)
+RUN git clone https://github.com/flashinfer-ai/flashinfer.git /flashinfer && \
+    cd /flashinfer && \
+    FLASHINFER_CUDA_ARCH_LIST="12.0" MAX_JOBS=8 pip install -v .
+
+# 7. 런타임 환경 변수 (안전장치 최대화)
+# Note: Both FlashInfer and FlashAttention fail on SM_120. Using TRITON (same as official 0.10.2)
+ENV VLLM_WORKER_MULTIPROC_METHOD=spawn
+ENV VLLM_USE_CUDA_GRAPHS=0
+ENV VLLM_TORCH_COMPILE=0
+ENV CUDA_LAUNCH_BLOCKING=1
+ENV CUDA_MODULE_LOADING=LAZY
+ENV CUDA_CACHE_DISABLE=1
+ENV VLLM_ATTENTION_BACKEND=TRITON_ATTN
+
+# HuggingFace 설정
+ENV HF_HOME=/models
+ENV TRANSFORMERS_CACHE=/models
+ENV HF_HUB_OFFLINE=0
+
+RUN mkdir -p /models /app
+WORKDIR /app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "openai/gpt-oss-20b", \
+     "--dtype", "bfloat16", \
+     "--gpu-memory-utilization", "0.90", \
+     "--max-model-len", "2048", \
+     "--tensor-parallel-size", "1", \
+     "--distributed-executor-backend", "mp", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--enforce-eager", \
+     "--disable-custom-all-reduce"]

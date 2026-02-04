@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  vllm:
+    image: vllm/vllm-openai:v0.15.0
+    container_name: gpt-oss-20b-vllm
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "8000:8000"
+    volumes:
+      - /home/gpt-oss/models:/models
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - HF_HOME=/models
+      - TRANSFORMERS_CACHE=/models
+    command: >
+      --model openai/gpt-oss-20b
+      --dtype auto
+      --gpu-memory-utilization 0.90
+      --max-model-len 8192
+      --trust-remote-code
+    shm_size: '16gb'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+
+  backend:
+    image: ghcr.io/cloud-linuxer/argocd-apps/backend:3.1.12-amd64
+    container_name: gpt-oss-20b-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV=production
+      - PORT=8080
+      - LOG_LEVEL=DEBUG
+      - VLLM_BASE_URL=http://vllm:8000
+      - VLLM_MODEL=openai/gpt-oss-20b
+      - VLLM_MAX_TOKENS=1000
+      - VLLM_TEMPERATURE=0.7
+      - VLLM_TIMEOUT=60
+    depends_on:
+      vllm:
+        condition: service_healthy
+
+  frontend:
+    image: ghcr.io/cloud-linuxer/argocd-apps/frontend:3.0.8-amd64
+    container_name: gpt-oss-20b-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend:8080
+      - STREAMLIT_SERVER_FILE_WATCHER_TYPE=none
+    depends_on:
+      - backend

@@ -1,0 +1,96 @@
+# RTX 5090 (SM_120) ABI 호환성 수정 - PyTorch 2.10 nightly 유지
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# 시스템 패키지
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    git curl wget \
+    build-essential \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python 3.11 기본 설정
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# pip 업그레이드
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# 1. FlashAttention 외부 패키지 명시적 제거
+RUN pip uninstall -y flash-attn flash_attn xformers || true
+
+# 2. PyTorch 2.10 nightly cu128 (SM_120 커널 포함) - 이것을 유지해야 함!
+RUN pip install --pre torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/nightly/cu128
+
+# 3. RTX 5090 빌드 환경 변수
+ENV TORCH_CUDA_ARCH_LIST="12.0"
+ENV CUDA_HOME=/usr/local/cuda
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+ENV MAX_JOBS=8
+
+# 4. vLLM 소스 클론
+RUN git clone https://github.com/vllm-project/vllm.git /vllm && \
+    cd /vllm && \
+    git checkout v0.11.0
+
+WORKDIR /vllm
+
+# 5. vLLM 의존성 수동 설치 (PyTorch 제외)
+RUN pip install \
+    packaging ninja wheel cmake \
+    numpy transformers tokenizers \
+    sentencepiece protobuf \
+    fastapi uvicorn pydantic \
+    prometheus-client py-cpuinfo psutil \
+    accelerate setuptools-scm \
+    aiohappyeyeballs aiohttp aiosignal astor attrs blake3 \
+    cachetools cbor2 cffi click cloudpickle compressed-tensors \
+    cupy-cuda12x depyf dill diskcache distro dnspython \
+    einops email-validator fastapi-cli fastapi-cloud-cli fastrlock \
+    frozendict frozenlist gguf httpcore httptools httpx \
+    interegular jiter jsonschema jsonschema-specifications lark \
+    llguidance llvmlite lm-format-enforcer markdown-it-py mdurl \
+    mistral_common msgpack msgspec multidict numba \
+    nvidia-nccl-cu12 openai openai-harmony opencv-python-headless \
+    outlines_core partial-json-parser prometheus-fastapi-instrumentator \
+    propcache pybase64 pycountry pycparser pydantic-extra-types \
+    pygments python-dotenv python-json-logger python-multipart \
+    pyzmq ray referencing rich rich-toolkit rignore rpds-py \
+    scipy sentry-sdk setproctitle shellingham soundfile soxr \
+    tiktoken triton typer uvloop watchfiles websockets \
+    xformers xgrammar yarl
+
+# 6. vLLM 소스 빌드 (TORCH_CUDA_ARCH_LIST="12.0", PyTorch 변경 방지)
+# --no-deps를 사용하여 의존성 재설치를 방지하고 PyTorch 2.10 nightly 유지
+RUN TORCH_CUDA_ARCH_LIST="12.0" MAX_JOBS=8 \
+    pip install --no-build-isolation --no-deps -v -e .
+
+# HuggingFace 설정
+ENV HF_HOME=/models
+ENV TRANSFORMERS_CACHE=/models
+ENV HF_HUB_OFFLINE=0
+
+RUN mkdir -p /models /app
+WORKDIR /app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# 실행 명령
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "openai/gpt-oss-20b", \
+     "--dtype", "auto", \
+     "--gpu-memory-utilization", "0.90", \
+     "--max-model-len", "8192", \
+     "--tensor-parallel-size", "1", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--enforce-eager", \
+     "--disable-custom-all-reduce"]

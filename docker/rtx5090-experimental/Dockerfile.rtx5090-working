@@ -1,0 +1,86 @@
+# RTX 5090 (sm_120) 작동 확인된 vLLM Dockerfile
+# PyTorch 2.9.0 nightly + CUDA 12.8 + vLLM 소스 빌드
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# 시스템 패키지 설치
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    git \
+    curl \
+    wget \
+    build-essential \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python 3.11을 기본으로 설정
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# pip 업그레이드
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# PyTorch 2.9.0 nightly with CUDA 12.8 (RTX 5090 필수)
+RUN pip install --pre torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/nightly/cu128
+
+# RTX 5090 (sm_120) 빌드 환경 변수
+ENV TORCH_CUDA_ARCH_LIST="12.0"
+ENV VLLM_FLASH_ATTN_VERSION=2
+ENV MAX_JOBS=8
+ENV CUDA_HOME=/usr/local/cuda
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
+# vLLM 저장소 클론 (v0.11.0)
+RUN git clone https://github.com/vllm-project/vllm.git /vllm && \
+    cd /vllm && \
+    git checkout v0.11.0
+
+# vLLM 빌드 준비
+WORKDIR /vllm
+RUN python use_existing_torch.py || echo "use_existing_torch.py not found, continuing..."
+
+# 빌드 의존성 설치
+RUN pip install packaging ninja wheel cmake \
+    numpy transformers tokenizers \
+    sentencepiece protobuf \
+    fastapi uvicorn pydantic \
+    prometheus-client py-cpuinfo psutil \
+    accelerate setuptools-scm
+
+# vLLM 소스 빌드 (sm_120 지원)
+RUN MAX_JOBS=8 TORCH_CUDA_ARCH_LIST="12.0" VLLM_FLASH_ATTN_VERSION=2 \
+    pip install --no-build-isolation -v -e .
+
+# HuggingFace 설정
+ENV HF_HOME=/models
+ENV TRANSFORMERS_CACHE=/models
+ENV HF_HUB_OFFLINE=0
+
+# 디렉토리 생성
+RUN mkdir -p /models /app
+
+# 작업 디렉토리
+WORKDIR /app
+
+# 포트 노출
+EXPOSE 8000
+
+# 헬스 체크
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# vLLM OpenAI 호환 서버 실행
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "openai/gpt-oss-20b", \
+     "--dtype", "auto", \
+     "--gpu-memory-utilization", "0.90", \
+     "--max-model-len", "8192", \
+     "--tensor-parallel-size", "1", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--enforce-eager", \
+     "--disable-custom-all-reduce"]

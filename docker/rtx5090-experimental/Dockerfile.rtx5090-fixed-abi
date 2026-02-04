@@ -1,0 +1,81 @@
+# RTX 5090 (SM_120) - ABI 문제 수정
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# 시스템 패키지
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    git curl wget \
+    build-essential \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python 3.11 기본 설정
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# pip 업그레이드
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# 1. FlashAttention 외부 패키지 명시적 제거
+RUN pip uninstall -y flash-attn flash_attn xformers || true
+
+# 2. PyTorch 2.10 nightly cu128 (SM_120 커널 포함)
+RUN pip install --pre torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/nightly/cu128
+
+# 3. RTX 5090 빌드 환경 변수
+ENV TORCH_CUDA_ARCH_LIST="12.0"
+ENV CUDA_HOME=/usr/local/cuda
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+ENV MAX_JOBS=8
+
+# 4. vLLM 소스 다운로드
+RUN git clone https://github.com/vllm-project/vllm.git /vllm && \
+    cd /vllm && \
+    git checkout v0.11.0
+
+WORKDIR /vllm
+
+# 5. 빌드 의존성 설치
+RUN pip install packaging ninja wheel cmake \
+    numpy transformers tokenizers \
+    sentencepiece protobuf \
+    fastapi uvicorn pydantic \
+    prometheus-client py-cpuinfo psutil \
+    accelerate setuptools-scm
+
+# 6. vLLM 소스 빌드 (TORCH_CUDA_ARCH_LIST="12.0")
+RUN TORCH_CUDA_ARCH_LIST="12.0" MAX_JOBS=8 \
+    pip install --no-build-isolation -v -e .
+
+# 7. PyTorch 2.10 nightly 재설치 (ABI 일치)
+RUN pip install --force-reinstall --no-deps --pre torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/nightly/cu128
+
+# HuggingFace 설정
+ENV HF_HOME=/models
+ENV TRANSFORMERS_CACHE=/models
+ENV HF_HUB_OFFLINE=0
+
+RUN mkdir -p /models /app
+WORKDIR /app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "openai/gpt-oss-20b", \
+     "--dtype", "auto", \
+     "--gpu-memory-utilization", "0.90", \
+     "--max-model-len", "8192", \
+     "--tensor-parallel-size", "1", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--enforce-eager", \
+     "--disable-custom-all-reduce"]

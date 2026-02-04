@@ -1,0 +1,108 @@
+# RTX 5090 (sm_120) optimized Dockerfile for Qwen3-Next-80B
+# Using PyTorch nightly + CUDA 12.8 for Blackwell support
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    git \
+    curl \
+    wget \
+    build-essential \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Python 3.11 as default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# Upgrade pip
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Install PyTorch nightly with CUDA 12.8 support for RTX 5090
+RUN pip install --pre torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/nightly/cu128
+
+# Set environment variables for RTX 5090 (sm_120)
+ENV TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6;8.9;9.0;12.0+PTX"
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+ENV CUDA_LAUNCH_BLOCKING=0
+
+# Install dependencies for vLLM build
+RUN pip install packaging \
+    numpy \
+    transformers \
+    sentencepiece \
+    protobuf \
+    fastapi \
+    uvicorn \
+    pydantic \
+    prometheus-client \
+    py-cpuinfo \
+    psutil \
+    ray \
+    accelerate \
+    setuptools-scm \
+    wheel \
+    cmake
+
+# Clone and build vLLM from source with sm_120 support
+RUN git clone https://github.com/vllm-project/vllm.git /vllm && \
+    cd /vllm && \
+    git checkout main && \
+    pip install ninja packaging && \
+    TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6;8.9;9.0;12.0+PTX" \
+    MAX_JOBS=4 \
+    pip install -v .
+
+# Install FlashAttention with Blackwell support (if available)
+# Fallback to Triton attention if FA fails
+RUN pip install flash-attn --no-build-isolation || echo "FlashAttention build failed, will use Triton"
+
+# RTX 5090 specific vLLM settings
+ENV VLLM_USE_TRITON_FLASH_ATTN=1
+ENV VLLM_WORKER_MULTIPROC_METHOD=spawn
+ENV VLLM_ATTENTION_BACKEND=TRITON
+ENV PYTORCH_NO_CUDA_MEMORY_CACHING=0
+
+# Disable CUDA graphs for initial stability
+ENV CUDA_GRAPH_DISABLE=1
+ENV VLLM_DISABLE_CUSTOM_ALL_REDUCE=1
+
+# HuggingFace settings
+ENV HF_HOME=/models
+ENV TRANSFORMERS_CACHE=/models
+ENV HF_HUB_OFFLINE=0
+
+# Create necessary directories
+RUN mkdir -p /models /app
+
+# Copy startup script for Qwen3Next registration
+COPY vllm_qwen3_startup.py /app/vllm_qwen3_startup.py
+
+# Working directory
+WORKDIR /app
+
+# Expose API port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Default command with safe settings for RTX 5090
+CMD ["python", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "Qwen/Qwen3-Next-80B-A3B-Instruct", \
+     "--dtype", "auto", \
+     "--gpu-memory-utilization", "0.90", \
+     "--max-model-len", "8192", \
+     "--tensor-parallel-size", "1", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--trust-remote-code", \
+     "--enforce-eager", \
+     "--disable-custom-all-reduce", \
+     "--cpu-offload-gb", "50"]
